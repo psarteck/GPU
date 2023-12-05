@@ -62,12 +62,17 @@ double gauss2DIntegration(double a1, double b1, double a2, double b2, int numPoi
     return result * 0.25 * (b1 - a1) * (b2 - a2);
 }
 
-int main() {
+int main(int argc, char * argv[]) {
+
+    int numPoints = (argc > 1) ? std::stoi(argv[1]) : 5000;
+
+    int numThreads = (argc > 2) ? std::stoi(argv[2]) : 4;
+
+    
     double a1 = 0.0, b1 = 10.0;
     double a2 = 0.0, b2 = 10.0;
-    int numPoints = 100000; 
 
-    omp_set_num_threads(6);
+    omp_set_num_threads(numThreads);
 
     double startTime = omp_get_wtime();
 
@@ -79,11 +84,27 @@ int main() {
     double ex = 13.1913267088667;
     double error = abs(result - ex);
 
-    cout << std::setprecision(25)<< "Résultat de l'intégration sur R^2 dans R : " << result << endl;
+    std::cout << std::setprecision(20) << "Result: " << result << std::endl;
+    std::cout << std::setprecision(20) << "Runtime: " << duration << " seconds" << std::endl;
+    std::cout << std::setprecision(20) << "Error: " << error << std::endl;
 
-    cout << std::setprecision(25)<< "Erreur : " << error << endl;
 
-    cout << std::setprecision(25)<< "Temps  : " << duration << " secondes"<< endl;
+    std::string filename = "Results/gauss2D_nbProc_" + std::to_string(numThreads) + ".txt";
+    std::cout << filename << std::endl;
+
+    // Ouvrir le fichier en mode écriture
+    std::ofstream outFile(filename, std::ios_base::app);
+
+    // Vérifier si le fichier est ouvert avec succès
+    if (outFile.is_open()) {
+        // Écrire la donnée dans le fichier
+        outFile << std::setprecision(20) << numPoints << " " << error << " " << duration << std::endl;
+
+        // Fermer le fichier
+        outFile.close();
+    } else {
+        std::cerr << "Erreur : Impossible d'ouvrir le fichier " << filename << " pour écriture." << std::endl;
+    }
 
     return 0;
 }

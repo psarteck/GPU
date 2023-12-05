@@ -4,7 +4,7 @@ rm *.txt
 if [[ "$OSTYPE" == "darwin"* ]]; then
     omp simpson.cpp -o simpson
 else
-    g++ -fopenmp -lm simpson.cpp -o simpson
+    g++ -fopenmp -lm simpson.cpp -o simpson.out
 fi
 
 if [ $? -eq 0 ]; then
@@ -12,7 +12,7 @@ if [ $? -eq 0 ]; then
     for process in $nprocess; do
         i=10000
         while [ $i -le 100000000 ]; do
-            ./simpson $i $process
+            ./simpson.out $i $process
             i=$((i * 10)) 
         done 
     done

@@ -2,7 +2,7 @@
 
 rm *.txt
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    mpic++ jacobi.c++ -o simpson
+    mpic++ jacobi.c++ -o simpsonMPI.out
 else
     g++ -fopenmp -lm simpson.cpp -o simpson
 fi
@@ -12,7 +12,7 @@ if [ $? -eq 0 ]; then
     for process in $nprocess; do
         i=10000
         while [ $i -le 100000000 ]; do
-            mpirun -np $process ./simpson $i $process
+            mpirun -np $process ./simpsonMPI.out $i $process
             i=$((i * 10)) 
         done 
     done
