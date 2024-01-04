@@ -1,0 +1,261 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[main=french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{amsmath,amssymb,amsfonts,helvet,color}
+\usepackage{amsthm}%\usepackage[pdftex]{graphicx}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{indentfirst}
+\usepackage{amsmath,amssymb,amsfonts,subeqnarray}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{bm}  % Pour le texte en gras
+\usepackage{xcolor}
+\usepackage[normalem]{ulem}
+\usepackage{pdfpages}
+\usepackage{subcaption}
+\usepackage{datatool}
+\usepackage{tabularx}
+\usepackage{setspace}
+
+
+
+
+\usepackage{geometry}
+\geometry{top=3cm, bottom=3cm, left=2.25cm , right=2.25cm}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=BlueViolet,
+    filecolor=OrangeRed,      
+    urlcolor=blue,
+    }
+\title{Rapport de projet CPU/GPU}
+\author{\\Matthieu PETIT\\Djemsay Morvan\\Ulysse Caromel\\\\\\
+Encadrant : Mariko Dunseath\\\\\\}
+
+\begin{document}
+
+\setstretch{1.3}
+
+
+% \maketitle
+
+\begin{titlepage}
+
+    \begin{center}
+        \begin{center}
+            \includegraphics[height=2.5cm]{Images/univ-rennes1.png}
+            
+        \end{center}
+        \begin{center}
+            \textbf{UNIVERSITE RENNES 1 }
+        \end{center}
+        \textsc{\Large }\\[2.5cm]
+    % Title
+    \rule{\linewidth}{0.3mm} \\[0.4cm]
+    { \huge \bfseries Rapport de fin de projet CPU/GPU \\[0.4cm] }
+    \rule{\linewidth}{0.3mm} \\[3cm]
+    
+    
+    % Author and supervisor
+    \noindent
+    \begin{center}
+        \textbf{Petit} Matthieu\\
+        \textbf{Caromel} Ulysse\\
+        \textbf{Morvan} Djemsay\\
+    \end{center}
+        
+    \color{black}
+    \centering
+    \large \textbf{Encadrant} - ~\textsc{Mariko Dunseath} 
+    
+    \vfill
+    
+    % Bottom of the page
+    {\textbf{\large {Année universitaire} 2023-2024}}
+    
+    \end{center}
+\end{titlepage}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Partie théorique}
+
+\subsection{Méthode de quadrature de Simpson}
+
+La méthode de quadrature de Simpson est une technique numérique utilisée pour estimer l'intégrale numériquement. Elle est basée sur l'approximation d'une fonction par un polynôme quadratique entre chaque paire de points adjacents.
+
+Supposons que nous ayons une fonction $f(x)$ que nous voulons intégrer sur l'intervalle $[a, b]$. La méthode de Simpson divise cet intervalle en sous-intervalles de largeur égale $h = \frac{b - a}{n}$, où $n$ est un nombre pair.
+
+L'approximation de l'intégrale sur chaque sous-intervalle $[x_i, x_{i+2}]$ est donnée par :
+\begin{align*}
+\int_{x_i}^{x_{i+2}} f(x) \,dx \approx \frac{h}{3} \left[ f(x_i) + 4f(x_{i+1}) + f(x_{i+2}) \right]
+\end{align*}
+
+La somme de ces approximations sur tous les sous-intervalles donne l'estimation finale de l'intégrale :
+\begin{align*}
+\int_{a}^{b} f(x) \,dx \approx \frac{h}{3} \left[ f(a) + 4f(x_1) + 2f(x_2) + \ldots + 2f(x_{n-2}) + 4f(x_{n-1}) + f(b) \right]
+\end{align*}
+
+La méthode de Simpson est souvent plus précise que les méthodes de quadrature plus simples comme la méthode des rectangles, car elle prend en compte les variations de la fonction sur chaque sous-intervalle.
+
+
+\subsection{Méthode de Gauss 2D}
+
+
+La méthode de quadrature Gaussienne en deux dimensions (Gauss 2D) est utilisée pour estimer numériquement l'intégrale d'une fonction $f(x, y)$ sur une région bidimensionnelle définie par $a \leq x \leq b$ et $c \leq y \leq d$.
+
+Supposons que nous ayons une fonction à intégrer sur cette région. La méthode de Gauss 2D utilise un ensemble de points et de poids associés pour approximer l'intégrale. La formule générale pour cette approximation est donnée par :
+\begin{align*}
+\iint_{R} f(x, y) \,dx\,dy \approx \sum_{i=1}^{n} \sum_{j=1}^{m} w_{ij} \cdot f(x_i, y_j)
+\end{align*}
+
+où $n$ et $m$ sont le nombre de points dans les directions $x$ et $y$, respectivement. Les points $x_i$ et $y_j$ sont les emplacements des points de quadrature, et $w_{ij}$ sont les poids associés à ces points.
+
+Une formule spécifique de quadrature Gaussienne 2D pour un quadrilatère est donnée par :
+\begin{align*}
+\iint_{R} f(x, y) \,dx\,dy \approx \sum_{i=1}^{n} \sum_{j=1}^{m} w_{ij} \cdot f\left(\frac{1}{2}(1 + \xi_i)x + \frac{1}{2}(1 - \xi_i)y, \frac{1}{2}(1 + \eta_j)x + \frac{1}{2}(1 - \eta_j)y\right)
+\end{align*}
+
+où $\xi_i$ et $\eta_j$ sont les points de quadrature et $w_{ij}$ sont les poids associés.
+
+La méthode de quadrature Gaussienne 2D offre une précision supérieure à la quadrature de Gauss unidimensionnelle, et elle est souvent utilisée pour résoudre numériquement des intégrales sur des domaines bidimensionnels complexes.
+
+
+\subsection{Méthode de Runge-Kutta}
+
+
+
+La méthode de Runge-Kutta est une technique numérique utilisée pour résoudre des équations différentielles ordinaires (EDO). La forme la plus courante est la méthode de Runge-Kutta d'ordre 4 (RK4), qui est souvent utilisée en raison de son équilibre entre précision et complexité.
+
+Supposons que nous ayons une EDO du premier ordre sous la forme :
+\begin{align*}
+\frac{dy}{dt} = f(t, y)
+\end{align*}
+
+La méthode RK4 consiste en les étapes suivantes, où $h$ est la taille du pas de discrétisation :
+\begin{align*}
+k_1 &= h \cdot f(t_n, y_n) \\
+k_2 &= h \cdot f(t_n + \frac{h}{2}, y_n + \frac{k_1}{2}) \\
+k_3 &= h \cdot f(t_n + \frac{h}{2}, y_n + \frac{k_2}{2}) \\
+k_4 &= h \cdot f(t_n + h, y_n + k_3)
+\end{align*}
+
+La mise à jour de la solution à chaque pas est alors donnée par :
+\begin{align*}
+y_{n+1} = y_n + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4)
+\end{align*}
+
+où $y_n$ est la valeur de la solution à l'instant $t_n$.
+
+Cette méthode offre une meilleure précision par rapport aux méthodes de pas fixe plus simples, mais elle nécessite également plus de calculs. Cependant, elle est largement utilisée en pratique pour sa robustesse et sa polyvalence.
+
+
+\section{Outils utilisés}
+
+\subsection{Open MP (CPU)}
+
+OpenMP (Open Multi-Processing) est une API (Interface de Programmation Applicative) qui facilite la programmation parallèle en C, C++, et Fortran. Son objectif principal est de permettre aux développeurs d'exploiter les architectures parallèles des processeurs multi-cœurs de manière simple et portable.
+
+Voici quelques points clés à propos d'OpenMP :
+
+\begin{itemize}
+
+    \item \textbf{Parallelisme explicite :} OpenMP permet aux programmeurs d'exprimer le parallélisme dans leur code de manière explicite à l'aide de directives de compilation. Ces directives sont des annotations spéciales ajoutées au code source.
+    
+    \item \textbf{Directives pragmatiques :} Les directives OpenMP sont écrites sous forme de commentaires pragmatiques qui sont ignorés par les compilateurs qui ne supportent pas OpenMP. Cela permet au code source d'être compilé et exécuté sur des machines qui ne prennent pas en charge OpenMP sans erreur.
+    
+    \item \textbf{Tâches parallèles et boucles :} OpenMP permet la parallélisation de boucles et de sections de code avec des directives telles que \verb|#pragma omp parallel for| pour paralléliser une boucle, ou \verb|#pragma omp parallel sections| pour diviser le code en sections parallèles.
+    
+    \item \textbf{Gestion automatique de l'ordonnancement :} OpenMP offre une gestion automatique de l'ordonnancement des tâches parallèles, simplifiant ainsi la tâche du programmeur en ce qui concerne la gestion des threads et l'ordonnancement des tâches.
+    
+    \item \textbf{Support multi-plateforme :} OpenMP est supporté par de nombreux compilateurs sur différentes plates-formes, ce qui rend le code portable entre différentes architectures.
+
+\end{itemize}
+
+
+En résumé, OpenMP est une solution efficace pour ajouter du parallélisme aux applications existantes sans avoir à réécrire complètement le code. Cela facilite la création de programmes performants sur des architectures multi-cœurs.
+
+
+\subsection{MPI (CPU)}
+
+
+MPI (Message Passing Interface) est une norme pour la programmation parallèle utilisée pour développer des applications sur des architectures distribuées ou parallèles. Contrairement à OpenMP qui se concentre sur les architectures multi-cœurs partagées, MPI est conçu pour gérer la communication entre différents processus s'exécutant sur des nœuds distincts d'un cluster.
+
+Voici quelques points clés à propos de MPI :
+
+\begin{itemize}
+    
+    \item \textbf{Modèle de programmation distribuée :} MPI s'appuie sur un modèle de programmation distribuée où chaque nœud d'un système peut avoir sa propre mémoire et exécute son propre processus. Les processus communiquent entre eux à l'aide de messages.
+    
+    \item \textbf{Passage de messages :} La communication entre les processus est réalisée via le passage explicite de messages. Les processus s'envoient des messages pour échanger des données ou coordonner leurs activités.
+    
+    \item \textbf{Abstraction des communications :} MPI fournit une abstraction des communications en permettant aux programmeurs d'utiliser des opérations de communication comme \verb|MPI_Send| et \verb|MPI_Recv| pour envoyer et recevoir des messages.
+    
+    \item \textbf{Point à point et collectif :} MPI prend en charge à la fois les communications point à point (entre deux processus) et les communications collectives (impliquant plusieurs processus). Les opérations collectives incluent des fonctionnalités telles que la diffusion, la réduction, la barrière, etc.
+    
+    \item \textbf{Indépendance d'architecture :} Comme OpenMP, MPI est conçu pour être indépendant de l'architecture matérielle, ce qui signifie qu'un code MPI peut être exécuté sur divers types de clusters sans nécessiter de modifications significatives.
+\end{itemize}
+
+
+En résumé, MPI est une norme de programmation parallèle qui permet de développer des applications distribuées en utilisant un modèle de passage de messages. Il est largement utilisé dans le domaine de la simulation, de l'analyse de données massives et d'autres domaines nécessitant une puissance de calcul parallèle sur des clusters de machines.
+
+
+\subsection{CUDA (GPU)}
+
+CUDA (Compute Unified Device Architecture) est une architecture de calcul parallèle développée par NVIDIA. Elle permet d'utiliser les GPU (Graphical Processing Unit) pour accélérer des tâches de calcul intensif. CUDA est particulièrement utilisé pour le calcul parallèle sur les cartes graphiques NVIDIA.
+
+Voici quelques points clés à propos de CUDA :
+
+\begin{itemize}
+    
+    \item \textbf{Modèle de programmation parallèle sur GPU :} CUDA permet aux programmeurs d'utiliser la puissance de calcul massivement parallèle des GPU. Il s'appuie sur un modèle de programmation parallèle où des threads s'exécutent simultanément sur les cœurs du GPU.
+    
+    \item \textbf{Kernels CUDA :} Le code CUDA s'exécute sur le GPU sous la forme de kernels. Un kernel est une fonction qui est exécutée par un grand nombre de threads sur le GPU.
+    
+    \item \textbf{Hétérogénéité :} CUDA permet l'exécution de code sur le CPU (hôte) et le GPU (dispositif) simultanément. Le CPU gère les tâches de coordination et de gestion générale, tandis que le GPU effectue des calculs massivement parallèles.
+    
+    \item \textbf{Hiérarchie des threads et des blocs :} Les threads CUDA sont organisés en blocs, et les blocs peuvent être organisés en grilles. Cette hiérarchie permet une gestion fine du parallélisme.
+    
+    \item \textbf{Gestion explicite de la mémoire :} Les programmeurs doivent gérer explicitement le transfert des données entre le CPU et le GPU, ainsi que la gestion de la mémoire sur le GPU (mémoire globale, mémoire partagée, etc.).
+\end{itemize}
+
+
+En résumé, CUDA permet d'exploiter la puissance de calcul des GPU pour accélérer des tâches parallèles. Il offre un modèle de programmation hétérogène avec une gestion explicite de la mémoire et des directives spéciales pour définir des kernels qui s'exécutent sur le GPU. Cette approche est particulièrement efficace pour des tâches intensives en calcul, comme le rendu graphique, la simulation physique, et l'apprentissage profond.
+
+
+\section{Implémentation et résultat}
+
+\subsection{Simpson}
+
+\subsubsection{Open MP}
+\subsubsection{MPI}
+\subsubsection{Cuda}
+
+\subsection{Gauss}
+
+\subsubsection{Open MP}
+\subsubsection{MPI}
+\subsubsection{Cuda}
+
+\subsection{Runge Kutta}
+
+\subsubsection{Open MP}
+\subsubsection{MPI}
+\subsubsection{Cuda}
+
+
+\section{Quelques explications du code}
+
+\end{document}
+
+
+

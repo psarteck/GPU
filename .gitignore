@@ -2,4 +2,9 @@
 *.vscode
 *.DS_Store
 *.exe
+*.out
+*.log
+*.aux
+*.synctex.gz
+*.toc
 Eigen/
