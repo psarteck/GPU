@@ -3,7 +3,7 @@ Remove-Item *.txt -ErrorAction SilentlyContinue
 if ($env:OSTYPE -like "darwin*") {
     mpic++ jacobi.c++ -o simpson
 } else {
-    g++ -fopenmp -lm simpson.cpp -o simpson
+    mpic++ jacobi.c++ -o simpson
 }
 
 if ($LastExitCode -eq 0) {

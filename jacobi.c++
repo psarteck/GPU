@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
     MPI_Reduce(&local_result, &result, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
     if(rank == 0){
-        std::string filename = "data_nbProc_" + std::to_string(size) + ".txt";
+        std::string filename = "Results/data_nbProc_" + std::to_string(size) + ".txt";
         double exact = M_PI;
         double error = abs(exact - result);
 

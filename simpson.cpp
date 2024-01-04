@@ -118,7 +118,7 @@ int main(int argc, char * argv[]) {
     std::cout << std::setprecision(20) << "Error: " << error << std::endl;
 
 
-    std::string filename = "data_nbProc_" + std::to_string(numThreads) + ".txt";
+    std::string filename = "Results/data_nbProc_" + std::to_string(numThreads) + ".txt";
     std::cout << filename << std::endl;
 
     // Ouvrir le fichier en mode écriture
