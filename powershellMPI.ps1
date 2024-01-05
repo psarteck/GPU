@@ -11,7 +11,7 @@ if ($LastExitCode -eq 0) {
     foreach ($process in $nprocess) {
         $i = 10000
         while ($i -le 100000000) {
-            mpiexec -np $process .\simpson $i $process
+            mpiexec -np $process .\simpson $i
             $i = $i * 10
         }
     }
