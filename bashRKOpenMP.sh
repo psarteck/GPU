@@ -1,6 +1,6 @@
 #!/bin/sh
 
-rm Results/error_mesh*
+rm Results/error_mesh_MP*
 if [[ "$OSTYPE" == "darwin"* ]]; then
     omp -lstdc++ -Xlinker -debug_snapshot rungeKuttaOpenMP.cpp -o rungeKuttaOpenMP.out
 else
@@ -17,5 +17,5 @@ if [ $? -eq 0 ]; then
         done 
     done
 fi
-python3 graph.py "error_mesh" 
+python3 graph.py "error_mesh_MP" 
 

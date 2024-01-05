@@ -1,11 +1,8 @@
 #!/bin/sh
 
-rm *.txt
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    mpic++ jacobi.c++ -o simpsonMPI.out
-else
-    g++ -fopenmp -lm simpson.cpp -o simpson
-fi
+# rm Results/
+mpic++ jacobi.c++ -o simpsonMPI.out
+
 
 if [ $? -eq 0 ]; then
     nprocess="2 4 5 6"

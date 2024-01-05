@@ -2,7 +2,7 @@
 #include <cmath>
 #include <vector>
 #include <fstream>
-#include <omp.h>
+#include "omp.h"
 #include <iomanip>
 #include <fstream>
 
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
 
 
     // Exporter les résultats dans un fichier CSV
-    std::string filename = "Results/error_mesh_nbProc_" + std::to_string(numThreads) + ".txt";
+    std::string filename = "Results/error_mesh_MP_nbProc_" + std::to_string(numThreads) + ".txt";
     std::ofstream outFile(filename, std::ios_base::app);
 
     // Vérifier si le fichier est ouvert avec succès
