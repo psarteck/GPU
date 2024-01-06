@@ -16,7 +16,6 @@ __global__ void integrate(double* result, int num_subintervals, double dx) {
     for (int i = tid; i < num_subintervals; i += blockDim.x * gridDim.x) {
         double x0 = i * dx;
         double x1 = (i + 1) * dx;
-        double x_mid = (x0 + x1) / 2.0;
 
         // Points de quadrature et poids pour la méthode de Gauss (ici, 4 points de Gauss)
         double xi[4] = {-0.861136, -0.339981, 0.339981, 0.861136};
@@ -39,8 +38,8 @@ int main() {
     const double a = 0.0; // Borne inférieure
     const double b = 1.0; // Borne supérieure
 
-    std::ofstream error_file("error_results_gauss.txt");
-    std::ofstream time_file("time_results_gauss.txt");
+    std::ofstream error_file("error_results.txt");
+    std::ofstream time_file("time_results.txt");
 
     for (int num_threads_idx = 0; num_threads_idx < num_values; ++num_threads_idx) {
         int num_threads_per_block = num_threads_per_block_values[num_threads_idx];
@@ -48,16 +47,19 @@ int main() {
         error_file << "Threads per block: " << num_threads_per_block << std::endl;
         time_file << "Threads per block: " << num_threads_per_block << std::endl;
 
-        for (int num_subintervals = num_subintervals_start; num_subintervals <= num_subintervals_end; num_subintervals *= 10) {
+        for (int num_subintervals = num_subintervals_start; num_subintervals <= num_subintervals_end; num_subintervals *= 2) {
             // Allocation mémoire sur le CPU pour stocker les résultats
             double* result_cpu = new double[num_subintervals];
 
             // Allocation mémoire sur le GPU
             double* result_gpu;
-            cudaMalloc((void**)&result_gpu, num_subintervals * sizeof(double));
+			cudaMalloc((void**)&result_gpu, num_subintervals * sizeof(double));
+
+			// Initialize GPU memory
+			cudaMemset(result_gpu, 0, num_subintervals * sizeof(double));
 
             // Paramètres du GPU
-            const int num_blocks = std::min(30, (num_subintervals + num_threads_per_block - 1) / num_threads_per_block);
+            const int num_blocks = std::min(60, (num_subintervals + num_threads_per_block - 1) / num_threads_per_block);
 
             // Mesurer le temps d'exécution
             auto start_time = std::chrono::high_resolution_clock::now();

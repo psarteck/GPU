@@ -34,12 +34,20 @@ def plot_results(file_name, title):
     # Tracer les graphiques
     plt.figure(figsize=(10, 6))
 
-    plt.loglog(data_128['x'], data_128['y'], label='128', color=colors[128])
-    plt.loglog(data_256['x'], data_256['y'], label='256', color=colors[256])
-    plt.loglog(data_512['x'], data_512['y'], label='512', color=colors[512])
-    plt.loglog(data_1024['x'], data_1024['y'], label='1024', color=colors[1024])
+    # Tracé en log-log pour l'erreur
+    if 'error' in file_name:
+        plt.loglog(data_128['x'], data_128['y'], label='128 threads per block', color=colors[128])
+        plt.loglog(data_256['x'], data_256['y'], label='256 threads per block', color=colors[256])
+        plt.loglog(data_512['x'], data_512['y'], label='512 threads per block', color=colors[512])
+        plt.loglog(data_1024['x'], data_1024['y'], label='1024 threads per block', color=colors[1024])
+    else:
+        # Tracé normal pour le temps
+        plt.plot(data_128['x'], data_128['y'], label='128 threads per block', color=colors[128])
+        plt.plot(data_256['x'], data_256['y'], label='256 threads per block', color=colors[256])
+        plt.plot(data_512['x'], data_512['y'], label='512 threads per block', color=colors[512])
+        plt.plot(data_1024['x'], data_1024['y'], label='1024 threads per block', color=colors[1024])
 
-    plt.xlabel('Nombre')
+    plt.xlabel('Nombre de subdivion n')
     plt.ylabel('Erreur' if 'error' in file_name else 'Temps')
     plt.title(title)
     plt.legend()
@@ -47,9 +55,7 @@ def plot_results(file_name, title):
     # Sauvegarder le graphique avant de l'afficher
     plt.savefig('error.png' if 'error' in file_name else 'time.png')
 
-    # Afficher le graphique à l'écran
-    plt.show()
-
 # Exemple d'utilisation
-plot_results('error_results.txt', 'Graphique d\'erreur en fonction du nombre avec différentes tailles de blocs')
-plot_results('time_results.txt', 'Graphique de temps en fonction du nombre avec différentes tailles de blocs')
+plot_results('error_results.txt', 'Etude de l\'erreur en fonction du nombre de subdivisions')
+plot_results('time_results.txt', 'Etude du temps de calcul en fonction du nombre de subdivisions')
+
