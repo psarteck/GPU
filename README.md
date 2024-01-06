@@ -1,6 +1,8 @@
 # CPU / GPU
 
-**Exécution**
+## Exécution
+
+**Entrez dans le fichier `parametres_Machine` le nombre de processeur max que vous souhaitez utiliser.**
 
 Des scripts bash sont disponibles dans le dossier `Bashs`, ils permettent de lancer les codes pour chaque méthode et chaque paralélisation : 
 * Simpson : 
@@ -10,7 +12,7 @@ Des scripts bash sont disponibles dans le dossier `Bashs`, ils permettent de lan
 
 Pour les codes en CUDA, ils se trouvent dans le dossier Cuda
 
-**Graph Python**
+## Graph Python 
 
 Le fichier `graph.py` dans le sous répertoire `CodesPython` permet d'afficher les données dans le répertoire `Results`. 
 Il prend en entrée le nom préfix des données que vous voulez afficher.

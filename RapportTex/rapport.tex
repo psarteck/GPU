@@ -48,7 +48,7 @@ Encadrant : Mariko Dunseath\\\\\\}
 
     \begin{center}
         \begin{center}
-            \includegraphics[height=2.5cm]{Images/univ-rennes1.png}
+            \includegraphics[height=2.5cm]{../Images/univ-rennes1.png}
             
         \end{center}
         \begin{center}
@@ -231,25 +231,100 @@ Voici quelques points clés à propos de CUDA :
 
 En résumé, CUDA permet d'exploiter la puissance de calcul des GPU pour accélérer des tâches parallèles. Il offre un modèle de programmation hétérogène avec une gestion explicite de la mémoire et des directives spéciales pour définir des kernels qui s'exécutent sur le GPU. Cette approche est particulièrement efficace pour des tâches intensives en calcul, comme le rendu graphique, la simulation physique, et l'apprentissage profond.
 
-
+\clearpage
 \section{Implémentation et résultat}
+On présente ici les résultats pour chaque méthode et chaque bibiliothèque de parallélisation
 
 \subsection{Simpson}
 
 \subsubsection{Open MP}
+
+\begin{figure}[ht!]
+    \centering
+
+    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_simp_Op_MP.png}}%
+    \hfill % Ajoute une espace horizontale entre les sous-figures
+    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_simp_Op_MP.png}}
+  
+    \caption{Méthode de simpson : Open MP}
+    \label{fig:figure}
+  \end{figure}
+
+
+
 \subsubsection{MPI}
+
+\begin{figure}[ht!]
+    \centering
+
+    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_simp_MPI.png}}%
+    \hfill % Ajoute une espace horizontale entre les sous-figures
+    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_simp_MPI.png}}
+  
+    \caption{Méthode de simpson : MPI}
+    \label{fig:figure}
+  \end{figure}
+
 \subsubsection{Cuda}
 
 \subsection{Gauss}
 
 \subsubsection{Open MP}
+
+\begin{figure}[ht!]
+    \centering
+
+    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_gauss_Op_MP.png}}%
+    \hfill % Ajoute une espace horizontale entre les sous-figures
+    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_gauss_Op_MP.png}}
+  
+    \caption{Méthode de Gaus 2D : Open MP}
+    \label{fig:figure}
+  \end{figure}
+
 \subsubsection{MPI}
+
+\begin{figure}[ht!]
+    \centering
+
+    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_gauss_MPI.png}}%
+    \hfill % Ajoute une espace horizontale entre les sous-figures
+    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_gauss_MPI.png}}
+  
+    \caption{Méthode de Gauss 2D : MPI}
+    \label{fig:figure}
+  \end{figure}
+
 \subsubsection{Cuda}
 
 \subsection{Runge Kutta}
 
 \subsubsection{Open MP}
+
+\begin{figure}[ht!]
+    \centering
+
+    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_RK_Op_MP.png}}%
+    \hfill % Ajoute une espace horizontale entre les sous-figures
+    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_RK_Op_MP.png}}
+  
+    \caption{Méthode de Runge Kutta : Open MP}
+    \label{fig:figure}
+  \end{figure}
+
 \subsubsection{MPI}
+
+\begin{figure}[ht!]
+    \centering
+
+    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_RK_MPI.png}}%
+    \hfill % Ajoute une espace horizontale entre les sous-figures
+    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_RK_MPI.png}}
+  
+    \caption{Méthode de Runge Kutta : MPI}
+    \label{fig:figure}
+  \end{figure}
+
 \subsubsection{Cuda}
 
 

@@ -5,6 +5,8 @@ results_folder="../Results"
 exe_folder="../Executables"
 python_folder="../CodesPython"
 
+nprocess=$(awk -F'=' '/Nb_Procs/{print $2}' ../parametres_Machine | tr -d ' ')
+
 rm $results_folder/montecarloMPI*
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -14,8 +16,8 @@ else
 fi
 
 if [ $? -eq 0 ]; then
-    nprocess=("2" "3" "4" "5" "6")
-    for process in "${nprocess[@]}"; do
+    for ((process=1; process<=$nprocess; process++)); do
+        echo "Calcul sur $process processeur(s)"
         i=1024
         while [ $i -le 10000000 ]; do
             mpirun -np $process $exe_folder/./montecarloMPI.out $i
