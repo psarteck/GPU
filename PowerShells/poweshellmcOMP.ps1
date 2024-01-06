@@ -1,20 +1,26 @@
-Remove-Item -Path Results\montecarlo* -Force
+$src_folder = "..\OpenMP"
+$results_folder = "..\Results"
+$exe_folder = "..\Executables"
+$python_folder = "..\CodesPython"
+
+$nprocess = (Get-Content "..\parametres_Machine" | Select-String -Pattern "Nb_Procs").ToString().Split('=')[1].Trim()
+
+Remove-Item "$results_folder\montecarlo_Op_MP*" -Force
 
 if ($env:OSTYPE -like "darwin*") {
-    omp -lstdc++ -Xlinker -debug_snapshot montecarlo.cpp -o montecarlo.exe
+    omp -lstdc++ -Xlinker -debug_snapshot "$src_folder\montecarloOpenMP.cpp" -o "$exe_folder\montecarloOp_MP.exe"
 } else {
-    g++ -fopenmp -lm montecarlo.cpp -o montecarlo.exe
+    g++ -fopenmp -lm "$src_folder\montecarloOpenMP.cpp" -o "$exe_folder\montecarloOp_MP.exe"
 }
 
-if ($LASTEXITCODE -eq 0) {
-    $nprocess = @(2, 3, 4, 5, 6)
-    foreach ($process in $nprocess) {
+if ($?) {
+    for ($process = 1; $process -le $nprocess; $process++) {
+        Write-Output "Calcul sur $process processeur(s)"
         $i = 1024
         while ($i -le 1000000) {
-            .\montecarlo.exe $i $process
+            & "$exe_folder\montecarloOp_MP.exe" $i $process
             $i *= 2
         }
     }
-    python .\graph.py "montecarlo2D"
+    python3 "$python_folder\graph.py" "montecarlo_Op_MP"
 }
-
