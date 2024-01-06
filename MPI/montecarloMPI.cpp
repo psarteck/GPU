@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
         std::cout << std::setprecision(20) << "Error: " << error << std::endl;
         std::cout << std::setprecision(20) << "Runtime: " << duration << " seconds" << std::endl;
 
-        std::string filename = "../Results/montecarloMPI_nbProc_" + std::to_string(numProcesses) + ".txt";
+        std::string filename = "../Results/montecarlo_MPI_nbProc_" + std::to_string(numProcesses) + ".txt";
         std::ofstream outFile(filename, std::ios_base::app);
         if (outFile.is_open()) {
             outFile << std::setprecision(20) << numPoints << " " << error << " " << duration << std::endl;

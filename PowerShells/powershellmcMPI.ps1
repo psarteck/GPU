@@ -22,5 +22,5 @@ if ($?) {
             $i *= 2
         }
     }
-    python3 "$python_folder\graph.py" "montecarloMPI"
+    python3 "$python_folder\graph.py" "montecarlo_MPI"
 }
