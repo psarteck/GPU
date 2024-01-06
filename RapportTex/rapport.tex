@@ -189,6 +189,29 @@ Pour appliquer la méthode de Monte Carlo à une intégrale spécifique, il est 
 
 Cependant, la précision de la méthode de Monte Carlo dépend fortement du nombre d'échantillons générés. Un grand nombre d'échantillons est généralement nécessaire pour obtenir des résultats précis, mais la méthode peut être efficace pour des fonctions avec des caractéristiques difficiles à modéliser de manière analytique.
 
+\subsection{Méthode d'intégration de Monte-Carlo}
+
+La méthode d'intégration de Monte Carlo est une technique utilisée en mathématiques pour estimer des valeurs numériques complexes, notamment les intégrales de fonctions dans des domaines à plusieurs dimensions. Elle repose sur des principes probabilistes et tire son nom du célèbre casino de Monte Carlo à Monaco, associant le hasard à des calculs numériques.
+
+L'idée principale de cette méthode consiste à estimer une valeur en utilisant des échantillons aléatoires dans un domaine donné. Prenons l'exemple d'une intégrale définie sur un domaine $D$ dans le plan. Plutôt que d'utiliser des méthodes traditionnelles d'intégration, on peut estimer la valeur de cette intégrale en générant aléatoirement des points dans $D$.
+
+Imaginons que nous voulions calculer l'intégrale $I = \int\int_{D} f(x,y) \, dx \, dy$. La méthode de Monte Carlo fonctionne approximativement comme suit :
+
+\begin{enumerate}
+    \item Génération de points aléatoires : On génère un grand nombre de points aléatoires $(x_i, y_i)$ dans le domaine $D$ selon une distribution choisie (souvent uniforme ou gaussienne).
+    \item Évaluation de la fonction : On évalue la fonction $f(x,y)$ pour chaque point $(x_i, y_i)$.
+    \item Calcul de la moyenne pondérée : On calcule la moyenne des valeurs de $f(x,y)$ évaluées pour les points générés et on multiplie cette moyenne par la mesure de l'ensemble $D$. Cette mesure est souvent estimée par le rapport entre le nombre de points dans $D$ et le nombre total de points générés.
+\end{enumerate}
+
+La formule d'estimation de Monte Carlo pour l'intégrale devient alors :
+$$I \approx A \cdot \frac{1}{N} \sum_{i=1}^{N} f(x_i, y_i)$$
+Où $A$ est la mesure de $D$, $N$ est le nombre de points générés et $(x_i, y_i)$ sont les coordonnées des points aléatoires.
+
+L'avantage clé de cette méthode est sa flexibilité et sa capacité à traiter des problèmes complexes dans des espaces à dimensions élevées. Cependant, sa précision dépend fortement du nombre de points aléatoires générés : plus le nombre de points est élevé, plus l'estimation de l'intégrale sera précise, mais cela peut nécessiter beaucoup de ressources computationnelles.
+
+La méthode de Monte Carlo offre une approche probabiliste puissante pour estimer numériquement des quantités complexes en utilisant des échantillons aléatoires. Son utilisation s'étend dans de nombreux domaines, de la physique à la finance, en raison de sa flexibilité et de sa capacité à traiter des problèmes difficiles à résoudre analytiquement.
+
+
 \section{Outils utilisés}
 
 \subsection{Open MP (CPU)}
@@ -390,6 +413,36 @@ A COMPLETER
   
     \caption{Méthode de Monte Carlo : MPI}
     \label{fig:MCMPI}
+  \end{figure}
+
+\subsubsection{Cuda}
+
+\subsection{Monte-Carlo}
+
+\subsubsection{Open MP}
+
+\begin{figure}[ht!]
+    \centering
+
+    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_montecarlo_Op_MP.png}}%
+    \hfill % Ajoute une espace horizontale entre les sous-figures
+    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_montecarlo_Op_MP.png}}
+  
+    \caption{Méthode d'intégration de Monte-Carlo : Open MP}
+    \label{fig:figure}
+  \end{figure}
+
+\subsubsection{MPI}
+
+\begin{figure}[ht!]
+    \centering
+
+    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_montecarlo_MPI.png}}%
+    \hfill % Ajoute une espace horizontale entre les sous-figures
+    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_montecarlo_MPI.png}}
+  
+    \caption{Méthode d'intégration de Monte-Carlo : MPI}
+    \label{fig:figure}
   \end{figure}
 
 \subsubsection{Cuda}

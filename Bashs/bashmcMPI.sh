@@ -24,5 +24,5 @@ if [ $? -eq 0 ]; then
             ((i *= 2))
         done
     done
-    python3 $python_folder/graph.py "montecarloMPI"
+    python3 $python_folder/graph.py "montecarlo_MPI"
 fi

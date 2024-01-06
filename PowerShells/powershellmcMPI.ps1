@@ -1,19 +1,26 @@
-Remove-Item -Path Results\*.txt -Force
+$src_folder = "..\MPI"
+$results_folder = "..\Results"
+$exe_folder = "..\Executables"
+$python_folder = "..\CodesPython"
+
+$nprocess = (Get-Content "..\parametres_Machine" | Select-String -Pattern "Nb_Procs").ToString().Split('=')[1].Trim()
+
+Remove-Item "$results_folder\montecarloMPI*" -Force
 
 if ($env:OSTYPE -like "darwin*") {
-    mpic++ -Xlinker -debug_snapshot montecarloMPI.cpp -o montecarloMPI
+    mpic++ -Xlinker -debug_snapshot "$src_folder\montecarloMPI.cpp" -o "$exe_folder\montecarloMPI.exe"
 } else {
-    mpic++ montecarloMPI.cpp -o montecarloMPI
+    mpic++ "$src_folder\montecarloMPI.cpp" -o "$exe_folder\montecarloMPI.exe"
 }
 
-if ($LASTEXITCODE -eq 0) {
-    $nprocess = "2", "3", "4", "5", "6"
-    foreach ($process in $nprocess) {
+if ($?) {
+    for ($process = 1; $process -le $nprocess; $process++) {
+        Write-Output "Calcul sur $process processeur(s)"
         $i = 1024
         while ($i -le 10000000) {
-            mpiexec -np $process montecarloMPI.exe $i
+            mpiexec -np $process "$exe_folder\montecarloMPI.exe" $i
             $i *= 2
         }
     }
-    python3 graph.py "montecarloMPI"
+    python3 "$python_folder\graph.py" "montecarlo_MPI"
 }

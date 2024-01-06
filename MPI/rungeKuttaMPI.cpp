@@ -1,8 +1,9 @@
 #include <iostream>
-#include <cmath>
 #include <vector>
 #include <fstream>
 #include <mpi.h>
+#include <iomanip>
+#include <cmath>
 
 // Fonction représentant la solution exacte de l'équation de la chaleur
 double exactSolution(double alpha, double x, double t) {

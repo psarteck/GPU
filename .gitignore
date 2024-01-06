@@ -9,3 +9,4 @@
 *.toc
 Eigen/
 __pycache__/
+Executables/
