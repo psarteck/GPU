@@ -43,8 +43,13 @@ def plot_results(file_name, title):
     plt.ylabel('Erreur' if 'error' in file_name else 'Temps')
     plt.title(title)
     plt.legend()
+
+    # Sauvegarder le graphique avant de l'afficher
+    plt.savefig('error.png' if 'error' in file_name else 'time.png')
+
+    # Afficher le graphique à l'écran
     plt.show()
 
 # Exemple d'utilisation
-plot_results('error_results_gauss.txt', 'Graphique d\'erreur en fonction du nombre avec différentes tailles de blocs')
-plot_results('time_results_gauss.txt', 'Graphique de temps en fonction du nombre avec différentes tailles de blocs')
+plot_results('error_results.txt', 'Graphique d\'erreur en fonction du nombre avec différentes tailles de blocs')
+plot_results('time_results.txt', 'Graphique de temps en fonction du nombre avec différentes tailles de blocs')

@@ -71,6 +71,7 @@ Encadrant : Mariko Dunseath\\\\\\}
         
     \color{black}
     \centering
+    \vfill
     \large \textbf{Encadrant} - ~\textsc{Mariko Dunseath} 
     
     \vfill
@@ -255,22 +256,29 @@ Voici quelques points clés à propos de CUDA :
 En résumé, CUDA permet d'exploiter la puissance de calcul des GPU pour accélérer des tâches parallèles. Il offre un modèle de programmation hétérogène avec une gestion explicite de la mémoire et des directives spéciales pour définir des kernels qui s'exécutent sur le GPU. Cette approche est particulièrement efficace pour des tâches intensives en calcul, comme le rendu graphique, la simulation physique, et l'apprentissage profond.
 
 \clearpage
-\section{Implémentation et résultat}
-On présente ici les résultats pour chaque méthode et chaque bibiliothèque de parallélisation
+\section{Implémentation et résultats}
+On présente ici les résultats pour chaque méthode et chaque bibiliothèque de parallélisation.
 
-\subsection{Simpson}
+Pour chaque méthode, on présente une étude de l'erreur en fonction du nombre de subdivision ainsi qu'une étude du temps en fonction du nombre de subdivision.
+
+Les outils OpenMP et MPI ont été utilisés avec un maximum de 8 processeurs, tandis que pour CUDA, la configuration utilisé est la suivante : 
+
+A COMPLETER
+
+\subsection{Méthode de Simpson}
 
 \subsubsection{Open MP}
 
-\begin{figure}[ht!]
+
+  \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_simp_Op_MP.png}}%
-    \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_simp_Op_MP.png}}
+    \subcaptionbox{Erreur \label{fig:errSimpMP}}{\includegraphics[width=0.5\linewidth]{../Images/error_simp_Op_MP.png}}%
+    \hfill 
+    \subcaptionbox{Temps \label{fig:timSimpMP}}{\includegraphics[width=0.5\linewidth]{../Images/time_simp_Op_MP.png}}
   
-    \caption{Méthode de simpson : Open MP}
-    \label{fig:figure}
+    \caption{Méthode de Simpson : Open MP}
+    \label{fig:simpMP}
   \end{figure}
 
 
@@ -280,12 +288,12 @@ On présente ici les résultats pour chaque méthode et chaque bibiliothèque de
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_simp_MPI.png}}%
-    \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_simp_MPI.png}}
+    \subcaptionbox{Erreur \label{fig:errSimpMPI}}{\includegraphics[width=0.5\linewidth]{../Images/error_simp_MPI.png}}%
+    \hfill 
+    \subcaptionbox{Temps \label{fig:timSimpMPI}}{\includegraphics[width=0.5\linewidth]{../Images/time_simp_MPI.png}}
   
-    \caption{Méthode de simpson : MPI}
-    \label{fig:figure}
+    \caption{Méthode de Simpson : MPI}
+    \label{fig:simpMPI}
   \end{figure}
 
 \subsubsection{Cuda}
@@ -297,12 +305,12 @@ On présente ici les résultats pour chaque méthode et chaque bibiliothèque de
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_gauss_Op_MP.png}}%
+    \subcaptionbox{Erreur \label{fig:errGaussMP}}{\includegraphics[width=0.5\linewidth]{../Images/error_gauss_Op_MP.png}}%
     \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_gauss_Op_MP.png}}
+    \subcaptionbox{Temps \label{fig:timGaussMP}}{\includegraphics[width=0.5\linewidth]{../Images/time_gauss_Op_MP.png}}
   
     \caption{Méthode de Gaus 2D : Open MP}
-    \label{fig:figure}
+    \label{fig:gaussMP}
   \end{figure}
 
 \subsubsection{MPI}
@@ -310,12 +318,12 @@ On présente ici les résultats pour chaque méthode et chaque bibiliothèque de
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_gauss_MPI.png}}%
+    \subcaptionbox{Erreur \label{fig:errGaussMPI}}{\includegraphics[width=0.5\linewidth]{../Images/error_gauss_MPI.png}}%
     \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_gauss_MPI.png}}
+    \subcaptionbox{Temps \label{fig:timGaussMPI}}{\includegraphics[width=0.5\linewidth]{../Images/time_gauss_MPI.png}}
   
     \caption{Méthode de Gauss 2D : MPI}
-    \label{fig:figure}
+    \label{fig:gaussMPI}
   \end{figure}
 
 \subsubsection{Cuda}
@@ -327,12 +335,12 @@ On présente ici les résultats pour chaque méthode et chaque bibiliothèque de
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_RK_Op_MP.png}}%
+    \subcaptionbox{Erreur \label{fig:errRKMP}}{\includegraphics[width=0.5\linewidth]{../Images/error_RK_Op_MP.png}}%
     \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_RK_Op_MP.png}}
+    \subcaptionbox{Temps \label{fig:timRKMP}}{\includegraphics[width=0.5\linewidth]{../Images/time_RK_Op_MP.png}}
   
     \caption{Méthode de Runge Kutta : Open MP}
-    \label{fig:figure}
+    \label{fig:RKMP}
   \end{figure}
 
 \subsubsection{MPI}
@@ -340,29 +348,29 @@ On présente ici les résultats pour chaque méthode et chaque bibiliothèque de
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_RK_MPI.png}}%
+    \subcaptionbox{Erreur \label{fig:errRKMPI}}{\includegraphics[width=0.5\linewidth]{../Images/error_RK_MPI.png}}%
     \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_RK_MPI.png}}
+    \subcaptionbox{Temps \label{fig:timRKMPI}}{\includegraphics[width=0.5\linewidth]{../Images/time_RK_MPI.png}}
   
     \caption{Méthode de Runge Kutta : MPI}
-    \label{fig:figure}
+    \label{fig:RKMPI}
   \end{figure}
 
 \subsubsection{Cuda}
 
-\subsection{Monte-Carlo}
+\subsection{Monte Carlo} 
 
 \subsubsection{Open MP}
 
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_montecarlo_Op_MP.png}}%
+    \subcaptionbox{Erreur \label{fig:errMCMP}}{\includegraphics[width=0.5\linewidth]{../Images/error_montecarlo_Op_MP.png}}%
     \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_montecarlo_Op_MP.png}}
+    \subcaptionbox{Temps \label{fig:timMCMP}}{\includegraphics[width=0.5\linewidth]{../Images/time_montecarlo_Op_MP.png}}
   
-    \caption{Méthode d'intégration de Monte-Carlo : Open MP}
-    \label{fig:figure}
+    \caption{Méthode de Monte Carlo : Open MP}
+    \label{fig:MCMP}
   \end{figure}
 
 \subsubsection{MPI}
@@ -370,15 +378,16 @@ On présente ici les résultats pour chaque méthode et chaque bibiliothèque de
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_montecarlo_MPI.png}}%
+    \subcaptionbox{Erreur \label{fig:errMCMPI}}{\includegraphics[width=0.5\linewidth]{../Images/error_montecarloMPI.png}}%
     \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_montecarlo_MPI.png}}
+    \subcaptionbox{Temps \label{fig:timMCMPI}}{\includegraphics[width=0.5\linewidth]{../Images/time_montecarloMPI.png}}
   
-    \caption{Méthode d'intégration de Monte-Carlo : MPI}
-    \label{fig:figure}
+    \caption{Méthode de Monte Carlo : MPI}
+    \label{fig:MCMPI}
   \end{figure}
 
 \subsubsection{Cuda}
+
 
 
 \section{Quelques explications du code}
