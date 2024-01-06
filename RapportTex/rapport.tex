@@ -159,35 +159,6 @@ où $y_n$ est la valeur de la solution à l'instant $t_n$.
 
 Cette méthode offre une meilleure précision par rapport aux méthodes de pas fixe plus simples, mais elle nécessite également plus de calculs. Cependant, elle est largement utilisée en pratique pour sa robustesse et sa polyvalence.
 
-\subsection{Méthode de Monte Carlo}
-
-\subsection{Méthode de Monte Carlo pour l'intégration numérique}
-
-La méthode de Monte Carlo pour l'intégration numérique est une approche probabiliste qui repose sur l'utilisation d'échantillons aléatoires pour estimer une intégrale. Contrairement à la méthode de quadrature de Simpson qui divise l'intervalle en sous-intervalles égaux, la méthode de Monte Carlo génère des points aléatoires dans l'intervalle d'intérêt.
-
-Supposons que nous ayons une fonction continue $f(x)$ définie sur l'intervalle $[a, b]$ que nous voulons intégrer. L'idée fondamentale de la méthode de Monte Carlo est d'estimer l'intégrale en utilisant la moyenne pondérée des valeurs de la fonction échantillonnées aléatoirement sur l'intervalle.
-
-La formule de base de la méthode de Monte Carlo pour l'intégration numérique est donnée par :
-
-\begin{align*}
-\int_{a}^{b} f(x) \,dx \approx \frac{b - a}{N} \sum_{i=1}^{N} f(x_i),
-\end{align*}
-
-où $N$ est le nombre d'échantillons aléatoires, et $x_i$ sont des points générés aléatoirement dans l'intervalle $[a, b]$. Ces points sont obtenus à partir d'une distribution uniforme.
-
-
-Pour appliquer la méthode de Monte Carlo à une intégrale spécifique, il est possible de suivre ces étapes :
-
-\begin{enumerate}
-    \item Choisissez le nombre d'échantillons $N$.
-    \item Générez $N$ échantillons aléatoires $x_i$ dans l'intervalle $[a, b]$.
-    \item Calculez l'estimation de l'intégrale en utilisant la formule (1).
-\end{enumerate}
-
-
-À la différence de la méthode de quadrature de Simpson qui divise l'intervalle en sous-intervalles et utilise une approximation polynomiale quadratique sur chaque sous-intervalle, la méthode de Monte Carlo n'impose pas de structure particulière à la division de l'intervalle. Elle s'adapte naturellement aux fonctions avec des variations complexes et peut être plus robuste dans certains cas.
-
-Cependant, la précision de la méthode de Monte Carlo dépend fortement du nombre d'échantillons générés. Un grand nombre d'échantillons est généralement nécessaire pour obtenir des résultats précis, mais la méthode peut être efficace pour des fonctions avec des caractéristiques difficiles à modéliser de manière analytique.
 
 \subsection{Méthode d'intégration de Monte-Carlo}
 
@@ -306,7 +277,7 @@ A COMPLETER
     \hfill 
     \subcaptionbox{Temps \label{fig:timSimpMP}}{\includegraphics[width=0.5\linewidth]{../Images/time_simp_Op_MP.png}}
   
-    \caption{Méthode de simpson : Open MP}
+    \caption{Méthode de Simpson : Open MP}
     \label{fig:simpMP}
   \end{figure}
 
@@ -321,7 +292,7 @@ A COMPLETER
     \hfill 
     \subcaptionbox{Temps \label{fig:timSimpMPI}}{\includegraphics[width=0.5\linewidth]{../Images/time_simp_MPI.png}}
   
-    \caption{Méthode de simpson : MPI}
+    \caption{Méthode de Simpson : MPI}
     \label{fig:simpMPI}
   \end{figure}
 
@@ -417,35 +388,6 @@ A COMPLETER
 
 \subsubsection{Cuda}
 
-\subsection{Monte-Carlo}
-
-\subsubsection{Open MP}
-
-\begin{figure}[ht!]
-    \centering
-
-    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_montecarlo_Op_MP.png}}%
-    \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_montecarlo_Op_MP.png}}
-  
-    \caption{Méthode d'intégration de Monte-Carlo : Open MP}
-    \label{fig:figure}
-  \end{figure}
-
-\subsubsection{MPI}
-
-\begin{figure}[ht!]
-    \centering
-
-    \subcaptionbox{Erreur \label{subfig1}}{\includegraphics[width=0.5\linewidth]{../Images/error_montecarlo_MPI.png}}%
-    \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{subfig2}}{\includegraphics[width=0.5\linewidth]{../Images/time_montecarlo_MPI.png}}
-  
-    \caption{Méthode d'intégration de Monte-Carlo : MPI}
-    \label{fig:figure}
-  \end{figure}
-
-\subsubsection{Cuda}
 
 
 \section{Quelques explications du code}
