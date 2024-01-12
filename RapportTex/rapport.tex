@@ -3,6 +3,7 @@
 \usepackage[main=french]{babel}
 \usepackage[T1]{fontenc}
 \usepackage{geometry}
+\usepackage{changepage}
 \usepackage{amsmath,amssymb,amsfonts,helvet,color}
 \usepackage{amsthm}%\usepackage[pdftex]{graphicx}
 \usepackage{graphicx}
@@ -262,19 +263,15 @@ On présente ici les résultats pour chaque méthode et chaque bibiliothèque de
 Pour chaque méthode, on présente une étude de l'erreur en fonction du nombre de subdivision ainsi qu'une étude du temps en fonction du nombre de subdivision.
 
 Les outils OpenMP et MPI ont été utilisés avec un maximum de 8 processeurs, tandis que pour CUDA, la configuration utilisé est la suivante : 
-
-A COMPLETER
+\begin{itemize}
+    \item CPU : i9-13900KF
+    \item RAM : 32 Gb
+    \item GPU : Nividia RTX-3060
+\end{itemize}
 
 On présente ensuite une étude sur le temps d'éxécution en fonction du nombre de subdivision, ainsi qu'une étude sur l'erreur en fonction du nombre de subdivision et cela pour chaque méthode (Simpson, Runge Kutta, Gauss 2D, Monte Carlo) et pour chaque parallélisation (Cuda, OpenMP, MPI).
-Nous affichons dans un premier temps tout les graphiques obtnus, une analyse sera donnée par la suite en partie (\ref{sec:analyse}).
+Nous affichons dans un premier temps tout les graphiques obtenus, une analyse sera donnée par la suite en partie (\ref{sec:analyse}).
 
-De manière générale, le temps de calcul pour chaque méthode croit en fonction du nombre de subdivisions. Cette croissance est plus faible quand on augmente le nombre de processeurs, mais ce gain et de moins en moins flagrant quand le nombre de processeurs atteint des valeurs élevées.
-
-L'erreur diminue en fonction du nombre de subdivisions, mais il est plus difficile de tirer des conclusions sur son comportement en fonction du nombre de processeurs. 
-
-Le comportement de l'erreur en fonction du nombre de processus peut varier.
-Dans certains cas, l'erreur peut diminuer à mesure que le nombre de processus augmente, car cela permet de diviser le travail en tâches plus petites et donc potentiellement plus précises.
-Cependant, une utilisation excessive de processus peut introduire des erreurs supplémentaires dues à des coûts de communication ou à des problèmes de synchronisation.
 
 \subsection{Méthode de Simpson}
 
@@ -308,6 +305,16 @@ Cependant, une utilisation excessive de processus peut introduire des erreurs su
   \end{figure}
 
 \subsubsection{Cuda}
+\begin{figure}[H]
+    \centering
+
+    \subcaptionbox{Erreur \label{fig:errSimpMPI}}{\includegraphics[width=0.45\linewidth]{../Images/error_simpson_cuda.png}}%
+    \hfill 
+    \subcaptionbox{Temps \label{fig:timSimpMPI}}{\includegraphics[width=0.45\linewidth]{../Images/time_simpson_cuda.png}}
+  
+    \caption{Méthode de Simpson : MPI}
+    \label{fig:simpMPI}
+  \end{figure}
 
 \subsection{Gauss}
 
@@ -338,6 +345,16 @@ Cependant, une utilisation excessive de processus peut introduire des erreurs su
   \end{figure}
 
 \subsubsection{Cuda}
+\begin{figure}[H]
+    \centering
+
+    \subcaptionbox{Erreur \label{fig:errSimpMPI}}{\includegraphics[width=0.45\linewidth]{../Images/error_Gauss2D_cuda.png}}%
+    \hfill 
+    \subcaptionbox{Temps \label{fig:timSimpMPI}}{\includegraphics[width=0.45\linewidth]{../Images/time_Gauss2D_cuda.png}}
+  
+    \caption{Méthode de Simpson : MPI}
+    \label{fig:simpMPI}
+  \end{figure}
 
 \subsection{Runge Kutta}
 
@@ -366,9 +383,17 @@ Cependant, une utilisation excessive de processus peut introduire des erreurs su
     \caption{Méthode de Runge Kutta : MPI}
     \label{fig:RKMPI}
   \end{figure}
-
 \subsubsection{Cuda}
+\begin{figure}[H]
+    \centering
 
+    \subcaptionbox{Erreur \label{fig:errRKMPI}}{\includegraphics[width=0.45\linewidth]{../Images/error_RK_cuda.png}}%
+    \hfill % Ajoute une espace horizontale entre les sous-figures
+    \subcaptionbox{Temps \label{fig:timRKMPI}}{\includegraphics[width=0.45\linewidth]{../Images/time_RK_cuda.png}}
+  
+    \caption{Méthode de Runge Kutta : MPI}
+    \label{fig:RKMPI}
+  \end{figure}
 \subsection{Monte Carlo} 
 
 \subsubsection{Open MP}
@@ -398,18 +423,55 @@ Cependant, une utilisation excessive de processus peut introduire des erreurs su
   \end{figure}
 
 \subsubsection{Cuda}
+\begin{figure}[H]
+    \centering
 
-A COMPLETER
+    \subcaptionbox{Erreur \label{fig:errMCMPI}}{\includegraphics[width=0.45\linewidth]{../Images/error_monte_carlo_cuda.png}}%
+    \hfill % Ajoute une espace horizontale entre les sous-figures
+    \subcaptionbox{Temps \label{fig:timMCMPI}}{\includegraphics[width=0.45\linewidth]{../Images/time_monte_carlo_cuda.png}}
+  
+    \caption{Méthode de Monte Carlo : MPI}
+    \label{fig:MCMPI}
+  \end{figure}
 
 
 \subsection{Analyse des résultats} \label{sec:analyse}
+\subsection*{MPI - Open MP}
+De manière générale, le temps de calcul pour chaque méthode croit en fonction du nombre de subdivisions. Cette croissance est plus faible quand on augmente le nombre de processeurs, mais ce gain et de moins en moins flagrant quand le nombre de processeurs atteint des valeurs élevées.
 
-A COMPLETER
+L'erreur diminue en fonction du nombre de subdivisions, mais il est plus difficile de tirer des conclusions sur son comportement en fonction du nombre de processeurs. 
 
+Le comportement de l'erreur en fonction du nombre de processus peut varier.
+Dans certains cas, l'erreur peut diminuer à mesure que le nombre de processus augmente, car cela permet de diviser le travail en tâches plus petites et donc potentiellement plus précises.
+Cependant, une utilisation excessive de processus peut introduire des erreurs supplémentaires dues à des coûts de communication ou à des problèmes de synchronisation.
+
+Pour approfondir l'analyse de chaque méthode et bibliothèque de parallélisation, examinons les détails suivants :
+
+Pour la version \textbf{OpenMP} de \textbf{Simpson}, bien que l'erreur puisse sembler chaotique, elle demeure extrêmement faible. Une perspective intéressante consisterait à générer un graphique similaire avec une fonction présentant une erreur plus significative, afin d'étudier son comportement.
+
+En ce qui concerne la version \textbf{MPI} de \textbf{Simpson}, une faible erreur est également observée. Une erreur plus importante pour un faible nombre de subdivisions pourrait résulter des coûts de communication entre les processus.
+
+Dans la version \textbf{OpenMP} de \textbf{Gauss2D}, l'erreur est cohérente en fonction du nombre de threads, et elle décroît conformément au nombre de subdivisions, comme prévu.
+
+En ce qui concerne la version \textbf{MPI} de \textbf{Gauss2D}, un coût de communication entre les processus est clairement perceptible, avec une légère détérioration de l'erreur lorsque le nombre de processus augmente.
+
+Pour la méthode \textbf{Runge-Kutta}, tant sur \textbf{OpenMP} que sur \textbf{MPI}, aucune différence majeure n'est observée dans l'erreur en fonction du nombre de processus. De plus, l'erreur diminue conformément au nombre de subdivisions, comme anticipé.
+
+Pour la méthode \textbf{Monte-Carlo}, les résultats des versions \textbf{OpenMP} et \textbf{MPI} sont conformes aux attentes. Étant donné que la méthode repose sur des probabilités, l'erreur peut être imprévisible pour un faible nombre de points, mais diminue rapidement avec leur augmentation.
+
+\subsection*{Cuda}
+\begin{itemize}
+    \item \textbf{Méthode de Simpson :} Pour cette méthode, on observe une amélioration légère mais non significative de l'erreur avec CUDA. Dans les deux cas, parallélisé et séquentiel, l'erreur converge rapidement vers des valeurs de l'ordre de $10^{-14}$ à $10^{-15}$. Cependant, le temps de calcul avec CUDA devient plus long lorsque le nombre de subdivisions est suffisamment grand. Cette augmentation du temps de calcul s'explique par le fait que le nombre de blocs reste constant indépendamment du nombre de subdivisions. Une adaptation du nombre de blocs en fonction du nombre de subdivisions aurait été nécessaire, ou une augmentation du nombre de threads par bloc aurait pu être envisagée pour optimiser les performances.
+    \item \textbf{Méthode Gauss2D et RK4 :} L'erreur demeure identique dans les deux cas, cependant, la version parallélisée avec CUDA se distingue par une nette accélération, particulièrement notable pour un nombre très élevé de points.
+    \item \textbf{Méthode Monte-Carlo :} L'erreur est légèrement plus importante avec CUDA, mais elle décroît significativement plus rapidement que dans la version séquentielle. De plus, la version séquentielle atteint rapidement ses limites en termes de temps de calcul, tandis qu'avec CUDA, ce problème survient seulement pour des valeurs extrêmement élevées ($2^{39}$). Il est crucial de noter que la génération de nombres aléatoires sur CPU n'est pas réalisée de la même manière que sur GPU.
+\end{itemize}
+En somme, bien que chaque méthode ait réagi différemment à la parallélisation avec CUDA, l'utilisation de cette technologie s'avère prometteuse pour accélérer significativement les calculs numériques, surtout lorsque des volumes de données importants sont impliqués. Cette accélération des calculs, particulièrement observée dans les méthodes Gauss2D et RK4 avec l'utilisation de CUDA, souligne l'intérêt de cette technologie lorsque l'objectif est de minimiser l'erreur numérique. La capacité à traiter des volumes de données importants dans des délais raisonnables offre la possibilité de réaliser des simulations avec des valeurs numériques élevées, facilitant ainsi la réduction de l'erreur associée aux calculs numériques. Cela renforce l'attrait de CUDA dans un contexte où la précision des résultats est cruciale.
+
+\newpage
 \section{Quelques explications du code}
 
 
-\subsection{Exécution}
+\subsection{Exécution MPI - Open MP}
 
 Entrez dans le fichier \verb|parametres_Machine| le nombre de processeur max que vous souhaitez utiliser.
 
@@ -423,23 +485,40 @@ Des scripts bash sont disponibles dans le dossier `Bashs`, ils permettent de lan
 
 Ces bashs compilent et executent le code $C_{++}$ pour une méthode et une parallélisation donnée et plottent les graphes de l'erreur et du temps d'execution à l'aide des données obtenues dans le dossier \verb|Resultats|. Les graphes sont sauvegardés dans \verb|Images|.
 
-Pour les codes en CUDA, ils se trouvent dans le dossier Cuda.
 
-Des scritps PowerShell sont également disponibles dans le dossier \verb|PowerShell| afin de pouvoir éxécuter les codes sous Windows.
-
-\subsection{Graph Python}
-
+Des scritps PowerShell sont également disponibles dans le dossier \verb|PowerShell| afin de pouvoir éxécuter les codes sous Windows.
+\newline
 Le fichier \verb|graph.py| dans le sous répertoire \verb|CodesPython| permet d'afficher les données dans le répertoire \verb|Results|. 
 Il prend en entrée le nom préfix des données que vous voulez afficher.
 Par exemple pour afficher les données pour la méthode de Simpson avec Open MP, placez vous dans le répertoire \verb|CodesPython| et tappez : 
 \begin{center}
 \verb|python3 graph.py "simp_Op_MP"|
 \end{center}
-
-\subsection{Remarques}
 Le code pour la méthode de Gauss 2D utilise la librairie Eigen, il sera nécessaire de linker la librairie et donc de devoir modifier légèrement les fichiers \verb|gauss2DMPI.cpp|, \verb|gauss2DOpenMP.cpp| ainsi que \verb|Gauss2D.cpp|.
 
+\subsection{Exécution Cuda}
+Pour chaque méthode, un script PowerShell est fourni et est construit de la manière suivante :
+\begin{itemize}
+\item Exécution du programme CUDA.
+\item Exécution du programme non parallélisé.
+\item Exécution du programme graph\_cuda.py pour enregistrer les graphiques.
+\item Suppression des fichiers générés pendant la compilation et des fichiers txt nécessaires au programme Python.
+\item Déplacement des graphiques dans le dossier Images.
+
+\end{itemize}
+
+La librairie Eigen est fournie dans le dossier cuda pour éviter tout problème de bibliothèques.
+
+\newpage
+\section{Conclusion - Perpesctive}
+Ce projet a permis d'explorer et de comparer différentes méthodes de calcul numérique, en mettant particulièrement l'accent sur la parallélisation avec OpenMP, MPI et CUDA. Chaque méthode a ses avantages et ses inconvénients, et le choix de la parallélisation dépend largement de la nature du problème et des ressources matérielles disponibles.
+
+L'utilisation d'OpenMP pour paralléliser des tâches sur CPU offre une approche simple et efficace pour exploiter les capacités multi-cœurs des processeurs. MPI, en revanche, offre une solution robuste pour la programmation parallèle distribuée sur des clusters de machines. La parallélisation avec CUDA sur GPU offre une puissance de calcul massive, mais nécessite une gestion minutieuse de la mémoire et une compréhension approfondie de l'architecture GPU.
+
+Les résultats obtenus ont montré que la parallélisation peut considérablement réduire le temps d'exécution des calculs, en particulier pour des problèmes complexes nécessitant une grande puissance de calcul. Cependant, il est important de noter que l'efficacité de la parallélisation dépend du problème spécifique et de la capacité du matériel.
+
+En conclusion, ce projet a permis d'acquérir une expérience pratique dans la mise en œuvre de différentes méthodes de calcul numérique et de comprendre les nuances de la parallélisation. Il offre également une base solide pour explorer davantage les possibilités de parallélisation dans d'autres contextes et pour d'autres types de problèmes.
+
+En perspective, il serait nécessaire d'adapter les codes existants et de créer des scripts bash permettant l'utilisation de plusieurs fonctions de test. Par ailleurs, une optimisation plus poussée de la gestion du nombre de blocs et de threads sur CUDA s'avérerait indispensable. Il aurait également été enrichissant d'explorer diverses distributions et de les évaluer sur un éventail de fonctions dans le contexte de la méthode Monte-Carlo, afin d'obtenir une compréhension approfondie de leur impact sur les résultats.
+
 \end{document}
-
-
-
