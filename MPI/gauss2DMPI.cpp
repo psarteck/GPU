@@ -107,15 +107,11 @@ int main(int argc, char *argv[]) {
 
         std::string filename = "../Results/gauss_MPI_nbProc_" + std::to_string(numProcesses) + ".txt";
 
-        // Ouvrir le fichier en mode écriture
         std::ofstream outFile(filename, std::ios_base::app);
 
-        // Vérifier si le fichier est ouvert avec succès
         if (outFile.is_open()) {
-            // Écrire la donnée dans le fichier
             outFile << std::setprecision(20) << numPoints << " " << error << " " << duration << std::endl;
 
-            // Fermer le fichier
             outFile.close();
         } else {
             std::cerr << "Erreur : Impossible d'ouvrir le fichier " << filename << " pour écriture." << std::endl;

@@ -79,7 +79,6 @@ int main(int argc, char * argv[]) {
 
     double duration = omp_get_wtime() - startTime;
 
-    // double ex = -0.161007927143812; //F2 
     double ex = 13.1913267088667;
     double error = abs(result - ex);
 
@@ -91,15 +90,12 @@ int main(int argc, char * argv[]) {
     std::string filename = "../Results/gauss_Op_MP_nbProc_" + std::to_string(numThreads) + ".txt";
     std::cout << filename << std::endl;
 
-    // Ouvrir le fichier en mode écriture
     std::ofstream outFile(filename, std::ios_base::app);
 
-    // Vérifier si le fichier est ouvert avec succès
     if (outFile.is_open()) {
-        // Écrire la donnée dans le fichier
+
         outFile << std::setprecision(20) << numPoints << " " << error << " " << duration << std::endl;
 
-        // Fermer le fichier
         outFile.close();
     } else {
         std::cerr << "Erreur : Impossible d'ouvrir le fichier " << filename << " pour écriture." << std::endl;
