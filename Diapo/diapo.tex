@@ -227,12 +227,63 @@
 \subsection{Open MP}
 \begin{frame}
     \frametitle{Open MP}
+    \small
+    \begin{itemize}
+        \item \textbf{Intégration de Gauss 2D }
+            \begin{itemize}
+                \item Parallélisation de la génération de points et de poids avec \\\texttt{\#pragma omp parallel for collapse(2)}.
+                \item L'utilisation de \texttt{collapse(2)} exploite le parallélisme dans les deux boucles imbriquées, améliorant l'efficacité.
+            \end{itemize}
+        \item \textbf{Intégration de Monte Carlo }
+            \begin{itemize}
+                \item La boucle de génération de points aléatoires est parallélisée avec \texttt{\#pragma omp parallel for reduction(+:total)}.
+                \item Chaque thread utilise une graine différente (\texttt{rd() + thread\_id}) pour éviter les séquences aléatoires identiques.
+            \end{itemize}
+        \item \textbf{Runge-Kutta }
+            \begin{itemize}
+                \item Boucle temporelle parallélisée avec \texttt{\#pragma omp parallel for}.
+                \item Copie temporaire des données (\texttt{std::vector<double> tempU(u)}) utilisée pour chaque thread, évitant les dépendances de données et optimisant les calculs.
+            \end{itemize}
+        \item \textbf{Intégration de Simpson}
+            \begin{itemize}
+                \item Boucles \texttt{for} parallélisées avec \texttt{\#pragma omp parallel for reduction(+:integral)} pour les deux versions.
+                \item Pour \texttt{compositeSimpsons\_3\_8}, utilisation d'un pas de 3 pour les indices de boucle, améliorant l'efficacité de la méthode.
+            \end{itemize}
+    \end{itemize}
 \end{frame}
 
-\subsection{MPI}
+
+
 \begin{frame}
     \frametitle{MPI}
+    \small
+    \begin{itemize}
+        \item \textbf{Intégration Gauss 2D}
+            \begin{itemize}
+                \item Parallélisation de la génération de points et de poids.
+                \item Utilisation de MPI\_Sendrecv pour l'échange des bords entre les processus.
+            \end{itemize}
+        \item \textbf{Intégration Monte Carlo }
+            \begin{itemize}
+                \item Division équitable des points entre les processus.
+                \item Utilisation de MPI\_Reduce pour obtenir le résultat global.
+            \end{itemize}
+        \item \textbf{Runge-Kutta}
+            \begin{itemize}
+                \item Division des données spatiales entre les processus.
+                \item Utilisation de MPI\_Gather pour collecter les résultats.
+            \end{itemize}
+        \item \textbf{Intégration Simpson}
+            \begin{itemize}
+                \item Division équitable des points entre les processus.
+                \item Utilisation de MPI\_Reduce pour obtenir le résultat global.
+            \end{itemize}
+    \end{itemize}
 \end{frame}
+
+
+  
+  
 
 \subsection{CUDA}
 \begin{frame}

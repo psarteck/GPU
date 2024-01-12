@@ -265,6 +265,10 @@ Les outils OpenMP et MPI ont été utilisés avec un maximum de 8 processeurs, t
 
 A COMPLETER
 
+On présente ensuite une étude sur le temps d'éxécution en fonction du nombre de subdivision, ainsi qu'une étude sur l'erreur en fonction du nombre de subdivision et cela pour chaque méthode (Simpson, Runge Kutta, Gauss 2D, Monte Carlo) et pour chaque parallélisation (Cuda, OpenMP, MPI).
+
+Nous affichons dans un premier temps tout les graphiques obtnus, une analyse sera donnée par la suite en partie (\ref{sec:analyse}).
+
 \subsection{Méthode de Simpson}
 
 \subsubsection{Open MP}
@@ -273,9 +277,9 @@ A COMPLETER
   \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{fig:errSimpMP}}{\includegraphics[width=0.5\linewidth]{../Images/error_simp_Op_MP.png}}%
+    \subcaptionbox{Erreur \label{fig:errSimpMP}}{\includegraphics[width=0.45\linewidth]{../Images/error_simp_Op_MP.png}}%
     \hfill 
-    \subcaptionbox{Temps \label{fig:timSimpMP}}{\includegraphics[width=0.5\linewidth]{../Images/time_simp_Op_MP.png}}
+    \subcaptionbox{Temps \label{fig:timSimpMP}}{\includegraphics[width=0.45\linewidth]{../Images/time_simp_Op_MP.png}}
   
     \caption{Méthode de Simpson : Open MP}
     \label{fig:simpMP}
@@ -288,9 +292,9 @@ A COMPLETER
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{fig:errSimpMPI}}{\includegraphics[width=0.5\linewidth]{../Images/error_simp_MPI.png}}%
+    \subcaptionbox{Erreur \label{fig:errSimpMPI}}{\includegraphics[width=0.45\linewidth]{../Images/error_simp_MPI.png}}%
     \hfill 
-    \subcaptionbox{Temps \label{fig:timSimpMPI}}{\includegraphics[width=0.5\linewidth]{../Images/time_simp_MPI.png}}
+    \subcaptionbox{Temps \label{fig:timSimpMPI}}{\includegraphics[width=0.45\linewidth]{../Images/time_simp_MPI.png}}
   
     \caption{Méthode de Simpson : MPI}
     \label{fig:simpMPI}
@@ -305,9 +309,9 @@ A COMPLETER
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{fig:errGaussMP}}{\includegraphics[width=0.5\linewidth]{../Images/error_gauss_Op_MP.png}}%
+    \subcaptionbox{Erreur \label{fig:errGaussMP}}{\includegraphics[width=0.45\linewidth]{../Images/error_gauss_Op_MP.png}}%
     \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{fig:timGaussMP}}{\includegraphics[width=0.5\linewidth]{../Images/time_gauss_Op_MP.png}}
+    \subcaptionbox{Temps \label{fig:timGaussMP}}{\includegraphics[width=0.45\linewidth]{../Images/time_gauss_Op_MP.png}}
   
     \caption{Méthode de Gaus 2D : Open MP}
     \label{fig:gaussMP}
@@ -318,9 +322,9 @@ A COMPLETER
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{fig:errGaussMPI}}{\includegraphics[width=0.5\linewidth]{../Images/error_gauss_MPI.png}}%
+    \subcaptionbox{Erreur \label{fig:errGaussMPI}}{\includegraphics[width=0.45\linewidth]{../Images/error_gauss_MPI.png}}%
     \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{fig:timGaussMPI}}{\includegraphics[width=0.5\linewidth]{../Images/time_gauss_MPI.png}}
+    \subcaptionbox{Temps \label{fig:timGaussMPI}}{\includegraphics[width=0.45\linewidth]{../Images/time_gauss_MPI.png}}
   
     \caption{Méthode de Gauss 2D : MPI}
     \label{fig:gaussMPI}
@@ -335,9 +339,9 @@ A COMPLETER
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{fig:errRKMP}}{\includegraphics[width=0.5\linewidth]{../Images/error_RK_Op_MP.png}}%
+    \subcaptionbox{Erreur \label{fig:errRKMP}}{\includegraphics[width=0.45\linewidth]{../Images/error_RK_Op_MP.png}}%
     \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{fig:timRKMP}}{\includegraphics[width=0.5\linewidth]{../Images/time_RK_Op_MP.png}}
+    \subcaptionbox{Temps \label{fig:timRKMP}}{\includegraphics[width=0.45\linewidth]{../Images/time_RK_Op_MP.png}}
   
     \caption{Méthode de Runge Kutta : Open MP}
     \label{fig:RKMP}
@@ -348,9 +352,9 @@ A COMPLETER
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{fig:errRKMPI}}{\includegraphics[width=0.5\linewidth]{../Images/error_RK_MPI.png}}%
+    \subcaptionbox{Erreur \label{fig:errRKMPI}}{\includegraphics[width=0.45\linewidth]{../Images/error_RK_MPI.png}}%
     \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{fig:timRKMPI}}{\includegraphics[width=0.5\linewidth]{../Images/time_RK_MPI.png}}
+    \subcaptionbox{Temps \label{fig:timRKMPI}}{\includegraphics[width=0.45\linewidth]{../Images/time_RK_MPI.png}}
   
     \caption{Méthode de Runge Kutta : MPI}
     \label{fig:RKMPI}
@@ -365,9 +369,9 @@ A COMPLETER
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{fig:errMCMP}}{\includegraphics[width=0.5\linewidth]{../Images/error_montecarlo_Op_MP.png}}%
+    \subcaptionbox{Erreur \label{fig:errMCMP}}{\includegraphics[width=0.45\linewidth]{../Images/error_montecarlo_Op_MP.png}}%
     \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{fig:timMCMP}}{\includegraphics[width=0.5\linewidth]{../Images/time_montecarlo_Op_MP.png}}
+    \subcaptionbox{Temps \label{fig:timMCMP}}{\includegraphics[width=0.45\linewidth]{../Images/time_montecarlo_Op_MP.png}}
   
     \caption{Méthode de Monte Carlo : Open MP}
     \label{fig:MCMP}
@@ -378,9 +382,9 @@ A COMPLETER
 \begin{figure}[ht!]
     \centering
 
-    \subcaptionbox{Erreur \label{fig:errMCMPI}}{\includegraphics[width=0.5\linewidth]{../Images/error_montecarloMPI.png}}%
+    \subcaptionbox{Erreur \label{fig:errMCMPI}}{\includegraphics[width=0.45\linewidth]{../Images/error_montecarlo_MPI.png}}%
     \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{fig:timMCMPI}}{\includegraphics[width=0.5\linewidth]{../Images/time_montecarloMPI.png}}
+    \subcaptionbox{Temps \label{fig:timMCMPI}}{\includegraphics[width=0.45\linewidth]{../Images/time_montecarloMPI.png}}
   
     \caption{Méthode de Monte Carlo : MPI}
     \label{fig:MCMPI}
@@ -388,9 +392,43 @@ A COMPLETER
 
 \subsubsection{Cuda}
 
+A COMPLETER
 
+
+\subsection{Analyse des résultats} \label{sec:analyse}
+
+A COMPLETER
 
 \section{Quelques explications du code}
+
+
+\subsection{Exécution}
+
+Entrez dans le fichier \verb|parametres_Machine| le nombre de processeur max que vous souhaitez utiliser.
+
+Des scripts bash sont disponibles dans le dossier `Bashs`, ils permettent de lancer les codes pour chaque méthode et chaque paralélisation : 
+\begin{itemize}
+  \item Simpson : 
+  \item Gauss2D :
+  \item Runge Kutta 
+  \item MonteCarlo 
+\end{itemize}
+
+Pour les codes en CUDA, ils se trouvent dans le dossier Cuda.
+
+Des scritps PowerShell sont également disponibles dans le dossier \verb|PowerShell| afin de pouvoir éxécuter les codes sous Windows.
+
+\subsection{Graph Python}
+
+Le fichier \verb|graph.py| dans le sous répertoire \verb|CodesPython| permet d'afficher les données dans le répertoire \verb|Results|. 
+Il prend en entrée le nom préfix des données que vous voulez afficher.
+Par exemple pour afficher les données pour la méthode de Simpson avec Open MP, placez vous dans le répertoire \verb|CodesPython| et tappez : 
+\begin{center}
+\verb|python3 graph.py "simp_Op_MP"|
+\end{center}
+
+\subsection{Remarques}
+Le code pour la méthode de Gauss 2D utilise la librairie Eigen, il sera nécessaire de linker la librairie et donc de devoir modifier légèrement les fichiers \verb|gauss2DMPI.cpp| et \verb|gauss2DOpenMP.cpp|.
 
 \end{document}
 
