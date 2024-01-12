@@ -26,9 +26,9 @@ void rungeKuttaHeatEquation(double alpha, std::vector<double>& u, double h, doub
         // Calcul des coefficients k1, k2, k3, k4
         for (int i = 1; i < numPoints - 1; ++i) {
             double k1 = h * heatEquation(alpha, tempU, i);
-            double k2 = h * heatEquation(alpha, tempU, i);
-            double k3 = h * heatEquation(alpha, tempU, i);
-            double k4 = h * heatEquation(alpha, tempU, i);
+            double k2 = h * heatEquation(alpha, tempU, i + 0.5 * h);
+            double k3 = h * heatEquation(alpha, tempU, i + 0.5 * h);
+            double k4 = h * heatEquation(alpha, tempU, i + h);
 
             // Mise à jour de la solution
             u[i] = tempU[i] + (1.0 / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4);

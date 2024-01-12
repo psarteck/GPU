@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
     if(rank == 0){
         std::string filename = "../Results/simp_MPI_nbProc_" + std::to_string(size) + ".txt";
         double exact = M_PI;
-        double error = abs(exact - result);
+        double error = std::abs(exact - result);
 
         // Ouvrir le fichier en mode écriture
         std::ofstream outFile(filename, std::ios_base::app);
