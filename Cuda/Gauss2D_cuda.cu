@@ -1,101 +1,135 @@
 #include <iostream>
-#include <cmath>
-#include <chrono>
+#include "eigen-3.4.0\eigen-3.4.0\Eigen\Dense"
 #include <fstream>
+#include <iomanip>
+#include <chrono>
+#include <string>
 
-// Fonction à intégrer
-__device__ double function(double x) {
-    return 4.0 / (1.0 + x * x);
+#include <curand_kernel.h>
+
+using namespace Eigen;
+using namespace std;
+using namespace std::chrono;
+
+__device__ double f(double x, double y) {
+    return x * y * cos(x) * sin(2 * y);
 }
 
-// Kernel CUDA pour l'évaluation de l'intégrale avec la méthode de Gauss
-__global__ void integrate(double* result, int num_subintervals, double dx) {
+__global__ void computeGauss2DPointsWeights(double* points, double* weights, int numPoints, int totalPoints) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
-    
-    double sum = 0.0;
-    for (int i = tid; i < num_subintervals; i += blockDim.x * gridDim.x) {
-        double x0 = i * dx;
-        double x1 = (i + 1) * dx;
 
-        // Points de quadrature et poids pour la méthode de Gauss (ici, 4 points de Gauss)
-        double xi[4] = {-0.861136, -0.339981, 0.339981, 0.861136};
-        double w[4] = {0.347855, 0.652145, 0.652145, 0.347855};
+    if (tid < totalPoints) {
+        int i = tid / numPoints;
+        int j = tid % numPoints;
 
-        for (int j = 0; j < 4; ++j) {
-            double x_quad = 0.5 * ((x1 - x0) * xi[j] + x1 + x0);
-            sum += w[j] * function(x_quad);
-        }
+        double xi = -1.0 + 2.0 * (i + 0.5) / numPoints;
+        double eta = -1.0 + 2.0 * (j + 0.5) / numPoints;
+        double wi = 2.0 / numPoints;
+
+        points[tid * 2] = xi;
+        points[tid * 2 + 1] = eta;
+        weights[tid] = wi;
     }
-    
-    result[tid] = sum * 0.5 * dx;
+}
+
+__global__ void gauss2DIntegrationKernel(double* result, double* points, double* weights, double a1, double b1, double a2, double b2, int numPoints, int totalPoints) {
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (tid < totalPoints) {
+        int i = tid / numPoints;
+        int j = tid % numPoints;
+
+        double xi = points[tid * 2];
+        double eta = points[tid * 2 + 1];
+
+        result[tid] = weights[i] * weights[j] * f((xi + 1) / 2.0 * (b1 - a1) + a1, (eta + 1) / 2.0 * (b2 - a2) + a2);
+    }
+}
+
+double gauss2DIntegrationCUDA(double a1, double b1, double a2, double b2, int numPoints) {
+    int totalPoints = numPoints * numPoints;
+
+    // Allocate device memory
+    double* d_points;
+    double* d_weights;
+    double* d_result;
+
+    cudaMalloc((void**)&d_points, totalPoints * 2 * sizeof(double));
+    cudaMalloc((void**)&d_weights, totalPoints * sizeof(double));
+    cudaMalloc((void**)&d_result, totalPoints * sizeof(double));
+
+    // Launch CUDA kernel to compute points and weights
+    int threadsPerBlock = 1024;
+    int numBlocks = (totalPoints + threadsPerBlock - 1) / threadsPerBlock;
+
+    computeGauss2DPointsWeights<<<numBlocks, threadsPerBlock>>>(d_points, d_weights, numPoints, totalPoints);
+    cudaDeviceSynchronize();
+
+    // Launch CUDA kernel for integration
+    gauss2DIntegrationKernel<<<numBlocks, threadsPerBlock>>>(d_result, d_points, d_weights, a1, b1, a2, b2, numPoints, totalPoints);
+    cudaDeviceSynchronize();
+
+    // Copy results from device to host
+    double* h_result = new double[totalPoints];
+    cudaMemcpy(h_result, d_result, totalPoints * sizeof(double), cudaMemcpyDeviceToHost);
+
+    // Calculate the final result on the CPU
+    double final_result = 0.0;
+    for (int i = 0; i < totalPoints; ++i) {
+        final_result += h_result[i];
+    }
+
+    // Free allocated memory
+    delete[] h_result;
+    cudaFree(d_points);
+    cudaFree(d_weights);
+    cudaFree(d_result);
+
+    // Calculate the average and integrate over the area
+    double area = (b1 - a1) * (b2 - a2);
+    double integral = final_result * 0.25 * area;
+
+    return integral;
+}
+
+void performComputation(int numPoints) {
+    double a1 = 0.0, b1 = 10.0;
+    double a2 = 0.0, b2 = 10.0;
+
+    auto start_time = high_resolution_clock::now();
+    double result = gauss2DIntegrationCUDA(a1, b1, a2, b2, numPoints);
+    auto end_time = high_resolution_clock::now();
+
+    auto duration = duration_cast<milliseconds>(end_time - start_time).count() / 1000.0;
+
+    double ex = 13.1913267088667;
+    double error = abs(result - ex);
+
+    std::string errorFilename = "error_cuda.txt";
+    std::string timeFilename = "time_cuda.txt";
+
+    std::ofstream errorFile(errorFilename, std::ios_base::app);  
+    std::ofstream timeFile(timeFilename, std::ios_base::app);    
+
+    if (errorFile.is_open() && timeFile.is_open()) {
+        errorFile << std::setprecision(20) << numPoints << " " << error << std::endl;
+        timeFile << std::setprecision(20) << numPoints << " " << duration << std::endl;
+
+        errorFile.close();
+        timeFile.close();
+    } else {
+        std::cerr << "Error: Unable to open files for writing." << std::endl;
+    }
 }
 
 int main() {
-    const int num_subintervals_start = 1000;
-    const int num_subintervals_end = 1000000000;
-    const int num_threads_per_block_values[] = {128, 256, 512, 1024};
-    const int num_values = sizeof(num_threads_per_block_values) / sizeof(num_threads_per_block_values[0]);
-    const double a = 0.0; // Borne inférieure
-    const double b = 1.0; // Borne supérieure
+    int maxExponent = 14; // 2^30
 
-    std::ofstream error_file("error_results.txt");
-    std::ofstream time_file("time_results.txt");
+    for (int exp = 1; exp <= maxExponent; ++exp) {
+        int numPoints = pow(2, exp);
 
-    for (int num_threads_idx = 0; num_threads_idx < num_values; ++num_threads_idx) {
-        int num_threads_per_block = num_threads_per_block_values[num_threads_idx];
-
-        error_file << "Threads per block: " << num_threads_per_block << std::endl;
-        time_file << "Threads per block: " << num_threads_per_block << std::endl;
-
-        for (int num_subintervals = num_subintervals_start; num_subintervals <= num_subintervals_end; num_subintervals *= 2) {
-            // Allocation mémoire sur le CPU pour stocker les résultats
-            double* result_cpu = new double[num_subintervals];
-
-            // Allocation mémoire sur le GPU
-            double* result_gpu;
-			cudaMalloc((void**)&result_gpu, num_subintervals * sizeof(double));
-
-			// Initialize GPU memory
-			cudaMemset(result_gpu, 0, num_subintervals * sizeof(double));
-
-            // Paramètres du GPU
-            const int num_blocks = std::min(60, (num_subintervals + num_threads_per_block - 1) / num_threads_per_block);
-
-            // Mesurer le temps d'exécution
-            auto start_time = std::chrono::high_resolution_clock::now();
-
-            // Appeler le kernel CUDA pour l'évaluation de l'intégrale
-            integrate<<<num_blocks, num_threads_per_block>>>(result_gpu, num_subintervals, (b - a) / num_subintervals);
-
-            // Copier les résultats du GPU vers le CPU
-            cudaMemcpy(result_cpu, result_gpu, num_subintervals * sizeof(double), cudaMemcpyDeviceToHost);
-
-            // Calculer le résultat final en additionnant les résultats de chaque thread
-            double final_result = 0.0;
-            for (int i = 0; i < num_subintervals; ++i) {
-                final_result += result_cpu[i];
-            }
-
-            // Mesurer le temps total d'exécution
-            auto end_time = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> duration = end_time - start_time;
-            double execution_time = duration.count();
-
-            // Calculer l'erreur par rapport à la valeur exacte
-            double error = std::abs(final_result - 3.141592653589793238462643383279502884197);
-
-            // Enregistrement des résultats dans les fichiers
-            error_file << num_subintervals << " " << error << std::endl;
-            time_file << num_subintervals << " " << execution_time << std::endl;
-
-            // Libérer la mémoire
-            delete[] result_cpu;
-            cudaFree(result_gpu);
-        }
+        performComputation(numPoints);
     }
-
-    error_file.close();
-    time_file.close();
 
     return 0;
 }
