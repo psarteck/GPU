@@ -21,7 +21,7 @@
 \usepackage{tabularx}
 \usepackage{setspace}
 
-
+\usepackage{float}
 
 
 \usepackage{geometry}
@@ -266,8 +266,15 @@ Les outils OpenMP et MPI ont été utilisés avec un maximum de 8 processeurs, t
 A COMPLETER
 
 On présente ensuite une étude sur le temps d'éxécution en fonction du nombre de subdivision, ainsi qu'une étude sur l'erreur en fonction du nombre de subdivision et cela pour chaque méthode (Simpson, Runge Kutta, Gauss 2D, Monte Carlo) et pour chaque parallélisation (Cuda, OpenMP, MPI).
-
 Nous affichons dans un premier temps tout les graphiques obtnus, une analyse sera donnée par la suite en partie (\ref{sec:analyse}).
+
+De manière générale, le temps de calcul pour chaque méthode croit en fonction du nombre de subdivisions. Cette croissance est plus faible quand on augmente le nombre de processeurs, mais ce gain et de moins en moins flagrant quand le nombre de processeurs atteint des valeurs élevées.
+
+L'erreur diminue en fonction du nombre de subdivisions, mais il est plus difficile de tirer des conclusions sur son comportement en fonction du nombre de processeurs. 
+
+Le comportement de l'erreur en fonction du nombre de processus peut varier.
+Dans certains cas, l'erreur peut diminuer à mesure que le nombre de processus augmente, car cela permet de diviser le travail en tâches plus petites et donc potentiellement plus précises.
+Cependant, une utilisation excessive de processus peut introduire des erreurs supplémentaires dues à des coûts de communication ou à des problèmes de synchronisation.
 
 \subsection{Méthode de Simpson}
 
@@ -414,6 +421,8 @@ Des scripts bash sont disponibles dans le dossier `Bashs`, ils permettent de lan
   \item MonteCarlo 
 \end{itemize}
 
+Ces bashs compilent et executent le code $C_{++}$ pour une méthode et une parallélisation donnée et plottent les graphes de l'erreur et du temps d'execution à l'aide des données obtenues dans le dossier \verb|Resultats|. Les graphes sont sauvegardés dans \verb|Images|.
+
 Pour les codes en CUDA, ils se trouvent dans le dossier Cuda.
 
 Des scritps PowerShell sont également disponibles dans le dossier \verb|PowerShell| afin de pouvoir éxécuter les codes sous Windows.
@@ -428,7 +437,7 @@ Par exemple pour afficher les données pour la méthode de Simpson avec Open MP,
 \end{center}
 
 \subsection{Remarques}
-Le code pour la méthode de Gauss 2D utilise la librairie Eigen, il sera nécessaire de linker la librairie et donc de devoir modifier légèrement les fichiers \verb|gauss2DMPI.cpp| et \verb|gauss2DOpenMP.cpp|.
+Le code pour la méthode de Gauss 2D utilise la librairie Eigen, il sera nécessaire de linker la librairie et donc de devoir modifier légèrement les fichiers \verb|gauss2DMPI.cpp|, \verb|gauss2DOpenMP.cpp| ainsi que \verb|Gauss2D.cpp|.
 
 \end{document}
 
