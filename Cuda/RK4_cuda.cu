@@ -25,9 +25,9 @@ __global__ void rungeKuttaHeatEquation(double alpha, double* u, double h, double
 
         // Calcul des coefficients k1, k2, k3, k4
         double k1 = h * heatEquation(alpha, tempU, 1);
-        double k2 = h * heatEquation(alpha, tempU, 1);
-        double k3 = h * heatEquation(alpha, tempU, 1);
-        double k4 = h * heatEquation(alpha, tempU, 1);
+        double k2 = h * heatEquation(alpha, tempU, 1+0.5*h);
+        double k3 = h * heatEquation(alpha, tempU, 1+0.5*h);
+        double k4 = h * heatEquation(alpha, tempU, 1+h);
 
         // Mise à jour de la solution
         u[i] = tempU[1] + (1.0 / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4);
