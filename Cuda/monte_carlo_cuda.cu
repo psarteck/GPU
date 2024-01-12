@@ -12,7 +12,6 @@ __global__ void monteCarlo2DIntegrationKernel(double* result, double x_min, doub
     int total_threads = blockDim.x * gridDim.x;
     long long int samples_per_thread = (num_samples + total_threads - 1) / total_threads;
 
-    // Use a different seed for each thread
     seed += tid;
     curandState state;
     curand_init(seed, tid, 0, &state);
@@ -29,31 +28,25 @@ __global__ void monteCarlo2DIntegrationKernel(double* result, double x_min, doub
 }
 
 double monteCarlo2DIntegrationCUDA(double x_min, double x_max, double y_min, double y_max, long long int num_samples, int num_blocks, int threads_per_block) {
-    // Compute the total number of threads
+
     int total_threads = num_blocks * threads_per_block;
 
-    // Allocate device memory for results
     double* d_result;
     cudaMalloc((void**)&d_result, total_threads * sizeof(double));
 
-    // Launch the CUDA kernel
     monteCarlo2DIntegrationKernel<<<num_blocks, threads_per_block>>>(d_result, x_min, x_max, y_min, y_max, num_samples, time(0));
 
-    // Copy results from device to host
     double* h_result = new double[total_threads];
     cudaMemcpy(h_result, d_result, total_threads * sizeof(double), cudaMemcpyDeviceToHost);
 
-    // Calculate the final result on the CPU
     double final_result = 0.0;
     for (int i = 0; i < total_threads; ++i) {
         final_result += h_result[i];
     }
 
-    // Free allocated memory
     delete[] h_result;
     cudaFree(d_result);
 
-    // Calculate the average and integrate over the area
     double area = (x_max - x_min) * (y_max - y_min);
     double average = final_result / num_samples;
     double integral = area * average;
@@ -74,8 +67,8 @@ void performComputation(double x_min, double x_max, double y_min, double y_max, 
     std::string errorFilename = "error_cuda.txt";
     std::string timeFilename = "time_cuda.txt";
 
-    std::ofstream errorFile(errorFilename, std::ios_base::app);  // Open for appending
-    std::ofstream timeFile(timeFilename, std::ios_base::app);    // Open for appending
+    std::ofstream errorFile(errorFilename, std::ios_base::app);  
+    std::ofstream timeFile(timeFilename, std::ios_base::app);    
 
     if (errorFile.is_open() && timeFile.is_open()) {
         errorFile << std::setprecision(20) << n << " " << error << std::endl;
@@ -92,7 +85,7 @@ int main() {
     double x_min = 0.0, x_max = 1.0;
     double y_min = 0.0, y_max = 1.0;
 
-    int maxExponent = 39; // 2^31
+    int maxExponent = 39; 
     int num_blocks = 3584;
     int threads_per_block = 64;
 

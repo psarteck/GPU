@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
     double a = 0;
     double b = 1;
 
-    int maxExponent = 30; // 2^30
+    int maxExponent = 30;
     for (int exp = 1; exp <= maxExponent; ++exp) {
         long int n = pow(2, exp);
 

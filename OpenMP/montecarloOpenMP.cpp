@@ -8,7 +8,6 @@
 #include <string>
 #include <fstream>
 
-// Define the function to be integrated (example function: x*y)
 double func(double x, double y) {
     return x * y;
 }
@@ -35,7 +34,6 @@ double func(double x, double y) {
     return integral;
 }*/
 
-// different seeds per theads
 double monteCarlo2DIntegration(std::function<double(double, double)> func, double x_min, double x_max, double y_min, double y_max, int num_samples) {
     double total = 0.0;
 
@@ -99,15 +97,11 @@ int main(int argc, char * argv[]) {
     std::string filename = "../Results/montecarlo_Op_MP_nbProc_" + std::to_string(numThreads) + ".txt";
     std::cout << filename << std::endl;
 
-    // Ouvrir le fichier en mode écriture
     std::ofstream outFile(filename, std::ios_base::app);
 
-    // Vérifier si le fichier est ouvert avec succès
     if (outFile.is_open()) {
-        // Écrire la donnée dans le fichier
         outFile << std::setprecision(20) << numPoints << " " << error << " " << duration << std::endl;
 
-        // Fermer le fichier
         outFile.close();
     } else {
         std::cerr << "Erreur : Impossible d'ouvrir le fichier " << filename << " pour écriture." << std::endl;

@@ -77,7 +77,7 @@ void performComputation(int numPoints) {
 }
 
 int main(int argc, char* argv[]) {
-    int maxExponent = 14; // 2^30
+    int maxExponent = 14; 
 
     for (int exp = 1; exp <= maxExponent; ++exp) {
         int numPoints = pow(2, exp);

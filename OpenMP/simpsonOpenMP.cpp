@@ -18,7 +18,6 @@ double cos1x(double x){
     return cos(1/x);
 }
 
-// trigo to integrate (modify as needed)
 double function(double x) {
     return 4.0 / (1.0 + x * x);
 }
@@ -53,7 +52,6 @@ double compositeSimpsons_3_8(double a, double b, long int n, double (*func)(doub
     return 3.0 *integral * h / 8.0;
 }
 
-// Composite Simpson's rule for numerical integration
 double compositeSimpsons(double a, double b, long int n, double (*func)(double)) { 
     double h = (b - a) / double(n);
     double integral = func(a) + func(b);
@@ -88,18 +86,14 @@ int main(int argc, char * argv[]) {
 
     int numThreads = (argc > 2) ? std::stoi(argv[2]) : 4;
 
-    // Set the number of threads
     omp_set_num_threads(numThreads);
 
-    // Measure runtime
     double startTime = omp_get_wtime();
 
-    // Calculate the integral using composite Simpson's rule
     double result = compositeSimpsons_3_8(a, b, n, &funcCosSin);
 
     
 
-    // Measure end time
     double endTime = omp_get_wtime();
 
     double duration = endTime - startTime;
@@ -112,7 +106,6 @@ int main(int argc, char * argv[]) {
 
 
     double error = abs(result - val_exacte);
-    // Output the result and runtime
     std::cout << std::setprecision(20) << "Result: " << result << std::endl;
     std::cout << std::setprecision(20) << "Runtime: " << duration << " seconds" << std::endl;
     std::cout << std::setprecision(20) << "Error: " << error << std::endl;
@@ -121,15 +114,11 @@ int main(int argc, char * argv[]) {
     std::string filename = "../Results/simp_Op_MP_nbProc_" + std::to_string(numThreads) + ".txt";
     std::cout << filename << std::endl;
 
-    // Ouvrir le fichier en mode écriture
     std::ofstream outFile(filename, std::ios_base::app);
 
-    // Vérifier si le fichier est ouvert avec succès
     if (outFile.is_open()) {
-        // Écrire la donnée dans le fichier
         outFile << std::setprecision(20) << n << " " << error << " " << duration << std::endl;
 
-        // Fermer le fichier
         outFile.close();
     } else {
         std::cerr << "Erreur : Impossible d'ouvrir le fichier " << filename << " pour écriture." << std::endl;

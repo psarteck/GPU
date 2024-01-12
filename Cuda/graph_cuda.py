@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Fonction pour lire les données depuis un fichier
+
 def lire_donnees(nom_fichier):
     with open(nom_fichier, 'r') as fichier:
         lignes = fichier.readlines()

@@ -27,7 +27,7 @@ double monteCarlo2DIntegration(int localNumPoints, double x_min, double x_max, d
 int main(int argc, char *argv[]) {
     MPI_Init(&argc, &argv);
 
-    int numPoints = (argc > 1) ? std::stoi(argv[1]) : 1000000; // Default 1 million points
+    int numPoints = (argc > 1) ? std::stoi(argv[1]) : 1000000; 
 
     int numProcesses, processRank;
     MPI_Comm_size(MPI_COMM_WORLD, &numProcesses);
@@ -36,10 +36,8 @@ int main(int argc, char *argv[]) {
     int localNumPoints = numPoints / numProcesses;
     int remainingPoints = numPoints % numProcesses;
 
-    // Distribute the remaining points among first 'remainingPoints' processes
     int myPoints = (processRank < remainingPoints) ? localNumPoints + 1 : localNumPoints;
 
-    // Seed random number generator differently for each process
     std::random_device rd;
     std::mt19937 gen(rd() + processRank);
 
@@ -54,11 +52,11 @@ int main(int argc, char *argv[]) {
     double duration = endTime - startTime;
 
     if (processRank == 0) {
-        double area = (1.0 - 0.0) * (1.0 - 0.0); // Area for this particular integration (x_max - x_min) * (y_max - y_min)
+        double area = (1.0 - 0.0) * (1.0 - 0.0); 
         double average = globalResult / numPoints;
         double integral = area * average;
 
-        double ex = 0.25; // Expected solution (change accordingly)
+        double ex = 0.25; 
         double error = std::abs(integral - ex * area);
 
         std::cout << std::setprecision(20) << "Result: " << integral << std::endl;

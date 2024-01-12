@@ -49,7 +49,6 @@ __global__ void gauss2DIntegrationKernel(double* result, double* points, double*
 double gauss2DIntegrationCUDA(double a1, double b1, double a2, double b2, int numPoints) {
     int totalPoints = numPoints * numPoints;
 
-    // Allocate device memory
     double* d_points;
     double* d_weights;
     double* d_result;
@@ -58,14 +57,12 @@ double gauss2DIntegrationCUDA(double a1, double b1, double a2, double b2, int nu
     cudaMalloc((void**)&d_weights, totalPoints * sizeof(double));
     cudaMalloc((void**)&d_result, totalPoints * sizeof(double));
 
-    // Launch CUDA kernel to compute points and weights
     int threadsPerBlock = 1024;
     int numBlocks = (totalPoints + threadsPerBlock - 1) / threadsPerBlock;
 
     computeGauss2DPointsWeights<<<numBlocks, threadsPerBlock>>>(d_points, d_weights, numPoints, totalPoints);
     cudaDeviceSynchronize();
 
-    // Launch CUDA kernel for integration
     gauss2DIntegrationKernel<<<numBlocks, threadsPerBlock>>>(d_result, d_points, d_weights, a1, b1, a2, b2, numPoints, totalPoints);
     cudaDeviceSynchronize();
 
@@ -73,19 +70,16 @@ double gauss2DIntegrationCUDA(double a1, double b1, double a2, double b2, int nu
     double* h_result = new double[totalPoints];
     cudaMemcpy(h_result, d_result, totalPoints * sizeof(double), cudaMemcpyDeviceToHost);
 
-    // Calculate the final result on the CPU
     double final_result = 0.0;
     for (int i = 0; i < totalPoints; ++i) {
         final_result += h_result[i];
     }
 
-    // Free allocated memory
     delete[] h_result;
     cudaFree(d_points);
     cudaFree(d_weights);
     cudaFree(d_result);
 
-    // Calculate the average and integrate over the area
     double area = (b1 - a1) * (b2 - a2);
     double integral = final_result * 0.25 * area;
 
@@ -123,7 +117,7 @@ void performComputation(int numPoints) {
 }
 
 int main() {
-    int maxExponent = 14; // 2^30
+    int maxExponent = 14; 
 
     for (int exp = 1; exp <= maxExponent; ++exp) {
         int numPoints = pow(2, exp);
