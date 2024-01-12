@@ -293,23 +293,19 @@
     \begin{itemize}
      \item \textbf{Intégration Simpson}
             \begin{itemize}
-                \item Division équitable des points entre les blocks.
                 \item Nombre de block maximal disponible sur mon GPU : 8584 et 64 threads par block.
             \end{itemize}
         \item \textbf{Intégration Gauss 2D}
             \begin{itemize}
-                \item Parallélisation de la génération de points et de poids.
                 \item Deux kernel, un pour la génération de points et de poids, l'autre pour l'intégration
                 \item Nombre de block en fonction du nombre de points et des poids avec le nombre maximal de threads par block : 1024. 
             \end{itemize}
         \item \textbf{Runge-Kutta}
             \begin{itemize}
-                \item Division des données spatiales entre les blocks.
                 \item Nombre de block en fonction de la discrétisation et 64 threads par block.
             \end{itemize}
         \item \textbf{Intégration Monte Carlo }
             \begin{itemize}
-                \item Division équitable des points entre les blocks.
                 \item Nombre de block maximal disponible sur mon GPU : 8584 et 64 threads par block.
             \end{itemize}
         
