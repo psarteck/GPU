@@ -10,15 +10,15 @@
 
 \setbeamercolor{section in head/foot}{fg=blue}
 
-\title{Présentation projet final CPU/ GPU}
-\author{Matthieu PETIT \\ Djemsay MORVAN \\ Ulysse CAROMEL}
+\title{Présentation projet final PP-GPU}
+\author{Matthieu PETIT \\ Djemsay MORVAN \\ Ulysse CAROMEL}
 \setbeamertemplate{section in toc}[sections numbered]
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{itemize items}[square]
 
 \begin{document}
 \begin{frame}
-    \includegraphics[width=0.2\textwidth]{../Images/univ-rennes1.png}
+    \includegraphics[width=0.2\textwidth]{Images/univ-rennes1.png}
     \rule{\linewidth}{0.3mm} \\[0.4cm]
     \titlepage
     \rule{\linewidth}{0.3mm} \\[0.4cm]
@@ -217,7 +217,7 @@
 
 
 
-\section{Outils de paralélisation}
+\section{Outils de parallélisation}
 
 \begin{frame}
     \frametitle{Outils de paralélisation}
@@ -229,51 +229,51 @@
     \frametitle{Open MP}
     \small
     \begin{itemize}
+        \item \textbf{Intégration de Simpson}
+            \begin{itemize}
+                \item Boucles \texttt{for} parallélisées avec \texttt{\#pragma omp parallel for reduction(+:integral)} pour les deux versions.
+                \item Pour \texttt{compositeSimpsons\_3\_8}, utilisation d'un pas de 3 pour les indices de boucle, améliorant l'efficacité de la méthode.
+            \end{itemize}
         \item \textbf{Intégration de Gauss 2D }
             \begin{itemize}
                 \item Parallélisation de la génération de points et de poids avec \\\texttt{\#pragma omp parallel for collapse(2)}.
                 \item L'utilisation de \texttt{collapse(2)} exploite le parallélisme dans les deux boucles imbriquées, améliorant l'efficacité.
-            \end{itemize}
-        \item \textbf{Intégration de Monte Carlo }
-            \begin{itemize}
-                \item La boucle de génération de points aléatoires est parallélisée avec \texttt{\#pragma omp parallel for reduction(+:total)}.
-                \item Chaque thread utilise une graine différente (\texttt{rd() + thread\_id}) pour éviter les séquences aléatoires identiques.
             \end{itemize}
         \item \textbf{Runge-Kutta }
             \begin{itemize}
                 \item Boucle temporelle parallélisée avec \texttt{\#pragma omp parallel for}.
                 \item Copie temporaire des données (\texttt{std::vector<double> tempU(u)}) utilisée pour chaque thread, évitant les dépendances de données et optimisant les calculs.
             \end{itemize}
-        \item \textbf{Intégration de Simpson}
+        \item \textbf{Intégration de Monte Carlo }
             \begin{itemize}
-                \item Boucles \texttt{for} parallélisées avec \texttt{\#pragma omp parallel for reduction(+:integral)} pour les deux versions.
-                \item Pour \texttt{compositeSimpsons\_3\_8}, utilisation d'un pas de 3 pour les indices de boucle, améliorant l'efficacité de la méthode.
+                \item La boucle de génération de points aléatoires est parallélisée avec \texttt{\#pragma omp parallel for reduction(+:total)}.
+                \item Chaque thread utilise une graine différente (\texttt{rd() + thread\_id}) pour éviter les séquences aléatoires identiques.
             \end{itemize}
     \end{itemize}
 \end{frame}
 
 
-
+\subsection{MPI}
 \begin{frame}
     \frametitle{MPI}
     \small
     \begin{itemize}
+        \item \textbf{Intégration Simpson}
+            \begin{itemize}
+                \item Division équitable des points entre les processus.
+                \item Utilisation de MPI\_Reduce pour obtenir le résultat global.
+            \end{itemize}
         \item \textbf{Intégration Gauss 2D}
             \begin{itemize}
                 \item Parallélisation de la génération de points et de poids.
                 \item Utilisation de MPI\_Sendrecv pour l'échange des bords entre les processus.
-            \end{itemize}
-        \item \textbf{Intégration Monte Carlo }
-            \begin{itemize}
-                \item Division équitable des points entre les processus.
-                \item Utilisation de MPI\_Reduce pour obtenir le résultat global.
             \end{itemize}
         \item \textbf{Runge-Kutta}
             \begin{itemize}
                 \item Division des données spatiales entre les processus.
                 \item Utilisation de MPI\_Gather pour collecter les résultats.
             \end{itemize}
-        \item \textbf{Intégration Simpson}
+        \item \textbf{Intégration Monte Carlo }
             \begin{itemize}
                 \item Division équitable des points entre les processus.
                 \item Utilisation de MPI\_Reduce pour obtenir le résultat global.
@@ -288,6 +288,33 @@
 \subsection{CUDA}
 \begin{frame}
     \frametitle{CUDA}
+        \small
+    Dans chaque code la méthode à son propre kernel CUDA, les autres fonctions sont utilisées sur le device et pour gérer la mémoire on utilise cudaMalloc et cudamemcpy.
+    \begin{itemize}
+     \item \textbf{Intégration Simpson}
+            \begin{itemize}
+                \item Division équitable des points entre les blocks.
+                \item Nombre de block maximal disponible sur mon GPU : 8584 et 64 threads par block.
+            \end{itemize}
+        \item \textbf{Intégration Gauss 2D}
+            \begin{itemize}
+                \item Parallélisation de la génération de points et de poids.
+                \item Deux kernel, un pour la génération de points et de poids, l'autre pour l'intégration
+                \item Nombre de block en fonction du nombre de points et des poids avec le nombre maximal de threads par block : 1024. 
+            \end{itemize}
+        \item \textbf{Runge-Kutta}
+            \begin{itemize}
+                \item Division des données spatiales entre les blocks.
+                \item Nombre de block en fonction de la discrétisation et 64 threads par block.
+            \end{itemize}
+        \item \textbf{Intégration Monte Carlo }
+            \begin{itemize}
+                \item Division équitable des points entre les blocks.
+                \item Nombre de block maximal disponible sur mon GPU : 8584 et 64 threads par block.
+            \end{itemize}
+        
+       
+    \end{itemize}
 \end{frame}
 
 \section{Résultats}
@@ -297,73 +324,120 @@
     \tableofcontents[currentsection]
 \end{frame}
 
+\subsection{OpenMP}
+
 \begin{frame}
-    \frametitle{Résultats pour Open MP}
+    \frametitle{Résultats pour OpenMP}
         \small
     \begin{tabular}{cc}
-        \includegraphics[width=0.45\linewidth]{../Images/time_gauss_Op_MP.png} &
-        \includegraphics[width=0.45\linewidth]{../Images/time_simp_Op_MP.png} \\
-        Gauss 2D & Simpson \\
-        \includegraphics[width=0.45\linewidth]{../Images/time_RK_Op_MP.png} &
-        \includegraphics[width=0.45\linewidth]{../Images/time_montecarlo_Op_MP.png} \\
-        Runge Kutta & Monte Carlo \\
+        \includegraphics[width=0.45\linewidth]{Images/time_simp_Op_MP.png} &
+        \includegraphics[width=0.45\linewidth]{Images/error_simp_Op_MP.png} \\
+        Simpson Temps & Simpson Erreur \\
+        \includegraphics[width=0.45\linewidth]{Images/time_gauss_Op_MP.png} &
+        \includegraphics[width=0.45\linewidth]{Images/error_gauss_Op_MP.png} \\
+        Gauss 2D Temps & Gauss 2D Erreur \\
     \end{tabular}
+        
+\end{frame}
+
+\begin{frame}
+    \frametitle{OpenMP}
+        \small
+    \begin{tabular}{cc}
+        \includegraphics[width=0.45\linewidth]{Images/time_RK_Op_MP.png} &
+        \includegraphics[width=0.45\linewidth]{Images/error_RK_Op_MP.png} \\
+        Runge Kutta Temps & Runge Kutta Erreur \\
+        \includegraphics[width=0.45\linewidth]{Images/time_montecarlo_Op_MP.png} &
+        \includegraphics[width=0.45\linewidth]{Images/error_montecarlo_Op_MP.png} \\
+        Monte Carlo Temps & Monte Carlo Erreur\\
+    \end{tabular}
+        
+\end{frame}
         
         % \begin{figure}
         %     \begin{minipage}{0.4\linewidth}
-        %         \includegraphics[width=\linewidth]{../Images/time_gauss_Op_MP.png}
+        %         \includegraphics[width=\linewidth]{Images/time_gauss_Op_MP.png}
         %         \caption{Gauss 2D}
         %     \end{minipage}\hfill
         %     \begin{minipage}{0.4\linewidth}
-        %         \includegraphics[width=\linewidth]{../Images/time_simp_Op_MP.png}
+        %         \includegraphics[width=\linewidth]{Images/time_simp_Op_MP.png}
         %         \caption{Simpson}
         %     \end{minipage}
         % \end{figure}
     
         % \begin{figure}
         %     \begin{minipage}{0.4\linewidth}
-        %         \includegraphics[width=\linewidth]{../Images/time_RK_Op_MP.png}
+        %         \includegraphics[width=\linewidth]{Images/time_RK_Op_MP.png}
         %         \caption{Runge Kutta}
         %     \end{minipage}\hfill
         %     \begin{minipage}{0.4\linewidth}
-        %         \includegraphics[width=\linewidth]{../Images/time_montecarlo_Op_MP.png}
+        %         \includegraphics[width=\linewidth]{Images/time_montecarlo_Op_MP.png}
         %         \caption{Monte Carlo}
         %     \end{minipage}
         % \end{figure}
 
+%   \end{frame}
+
+
+\subsection{MPI}
+
+\begin{frame}
+    \frametitle{Résultats pour MPI}
+        \small
+    \begin{tabular}{cc}
+        \includegraphics[width=0.45\linewidth]{Images/time_simp_MPI.png} &
+        \includegraphics[width=0.45\linewidth]{Images/error_simp_MPI.png} \\
+        Simpson Temps & Simpson Erreur \\
+        \includegraphics[width=0.45\linewidth]{Images/time_gauss_MPI.png} &
+        \includegraphics[width=0.45\linewidth]{Images/error_gauss_MPI.png} \\
+        Gauss 2D Temps & Gauss 2D Erreur \\
+    \end{tabular}
+        
 \end{frame}
-
-
-\subsection{Résultats pour MPI}
 
 \begin{frame}
     \frametitle{MPI}
         \small
     \begin{tabular}{cc}
-        \includegraphics[width=0.45\linewidth]{../Images/time_gauss_MPI.png} &
-        \includegraphics[width=0.45\linewidth]{../Images/time_simp_MPI.png} \\
-        Gauss 2D & Simpson \\
-        \includegraphics[width=0.45\linewidth]{../Images/time_RK_MPI.png} &
-        \includegraphics[width=0.45\linewidth]{../Images/time_montecarlo_MPI.png} \\
-        Runge Kutta & Monte Carlo \\
+        \includegraphics[width=0.45\linewidth]{Images/time_RK_MPI.png} &
+        \includegraphics[width=0.45\linewidth]{Images/error_RK_MPI.png} \\
+        Runge Kutta Temps & Runge Kutta Erreur \\
+        \includegraphics[width=0.45\linewidth]{Images/time_montecarlo_MPI.png} &
+        \includegraphics[width=0.45\linewidth]{Images/error_montecarlo_MPI.png} \\
+        Monte Carlo Temps & Monte Carlo Erreur\\
     \end{tabular}
         
 \end{frame}
 
-\subsection{Résultats pour CUDA}
+\subsection{CUDA}
+
+\begin{frame}
+    \frametitle{Résultats pour CUDA}
+        \small
+    \begin{tabular}{cc}
+        \includegraphics[width=0.45\linewidth]{Images/time_simpson_cuda.png} &
+        \includegraphics[width=0.45\linewidth]{Images/error_simpson_cuda.png} \\
+        Simpson Temps & Simpson Erreur\\
+        \includegraphics[width=0.45\linewidth]{Images/time_Gauss2D_cuda.png} &
+        \includegraphics[width=0.45\linewidth]{Images/error_Gauss2D_cuda.png} \\
+        Gauss2D Temps & Gauss2D Erreur\\
+    \end{tabular}
+        
+\end{frame}
 
 \begin{frame}
     \frametitle{CUDA}
         \small
     \begin{tabular}{cc}
-        \includegraphics[width=0.45\linewidth]{../Images/time_simpson_cuda.png} &
-        \includegraphics[width=0.45\linewidth]{../Images/time_Gauss2D_cuda.png} \\
-        Gauss 2D & Simpson \\
-        % \includegraphics[width=0.45\linewidth]{../Images/time_RK_cuda.png} &
-        % \includegraphics[width=0.45\linewidth]{../Images/time_montecarlo_cuda.png} \\
-        Runge Kutta & Monte Carlo \\
+         \includegraphics[width=0.45\linewidth]{Images/time_RK_cuda.png} &
+         \includegraphics[width=0.45\linewidth]{Images/error_RK_cuda.png} \\
+        RK4 Temps & RK4 Erreur\\
+         \includegraphics[width=0.45\linewidth]{Images/time_monte_carlo_cuda.png} &
+         \includegraphics[width=0.45\linewidth]{Images/error_monte_carlo_cuda.png} \\
+        Monte Carlo Temps & Monte Carlo Erreur\\
     \end{tabular}
         
 \end{frame}
+
 
 \end{document}
