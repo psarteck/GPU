@@ -1,5 +1,5 @@
 #include <iostream>
-#include "eigen-3.4.0\eigen-3.4.0\Eigen\Dense"
+#include "..\Cuda\eigen-3.4.0\eigen-3.4.0\Eigen\Dense"
 #include <fstream>
 #include <iomanip>
 #include <chrono>
@@ -8,7 +8,6 @@
 using namespace Eigen;
 using namespace std;
 using namespace std::chrono;
-
 
 double f3(double x, double y) {
     return x * y * cos(x) * sin(2 * y);
@@ -46,7 +45,7 @@ double gauss2DIntegration(double a1, double b1, double a2, double b2, int numPoi
     return result * 0.25 * (b1 - a1) * (b2 - a2);
 }
 
-void performComputation(int numPoints) {
+void performComputation(int numPoints, std::ofstream& output_file) {
     double a1 = 0.0, b1 = 10.0;
     double a2 = 0.0, b2 = 10.0;
 
@@ -59,31 +58,26 @@ void performComputation(int numPoints) {
     double ex = 13.1913267088667;
     double error = abs(result - ex);
 
-    std::string errorFilename = "error.txt";
-    std::string timeFilename = "time.txt";
-
-    std::ofstream errorFile(errorFilename, std::ios_base::app);  
-    std::ofstream timeFile(timeFilename, std::ios_base::app);    
-
-    if (errorFile.is_open() && timeFile.is_open()) {
-        errorFile << std::setprecision(20) << numPoints << " " << error << std::endl;
-        timeFile << std::setprecision(20) << numPoints << " " << duration << std::endl;
-
-        errorFile.close();
-        timeFile.close();
-    } else {
-        std::cerr << "Error: Unable to open files for writing." << std::endl;
-    }
+    output_file << std::setprecision(20) << numPoints << " " << error << " " << duration << std::endl;
 }
 
 int main(int argc, char* argv[]) {
-    int maxExponent = 14; 
+    std::string outputFilename = "output_gauss_seq.txt";
+    std::ofstream outputFile(outputFilename, std::ios_base::app);
+
+    if (!outputFile.is_open()) {
+        std::cerr << "Error: Unable to open the output file for writing." << std::endl;
+        return 1;
+    }
+
+    int maxExponent = 14;
 
     for (int exp = 1; exp <= maxExponent; ++exp) {
         int numPoints = pow(2, exp);
-
-        performComputation(numPoints);
+        performComputation(numPoints, outputFile);
     }
+
+    outputFile.close();
 
     return 0;
 }

@@ -4,51 +4,73 @@
 #include <fstream>
 #include <iomanip>
 
+constexpr int num_threads_per_block = 64;
+
 __device__ double function(double x) {
     return 4.0 / (1.0 + x * x);
 }
 
 __global__ void integrate(double* result, int num_subintervals, double dx) {
-    int tid = blockIdx.x * blockDim.x + threadIdx.x;
-    
-    double sum = 0.0;
-    for (int i = tid; i < num_subintervals; i += blockDim.x * gridDim.x) {
+    __shared__ volatile double partial_sum[num_threads_per_block];
+
+    int tid = threadIdx.x;
+    int global_tid = blockIdx.x * blockDim.x + tid;
+
+    double local_sum = 0.0;
+    double compensation = 0.0;
+    for (int i = global_tid; i < num_subintervals; i += blockDim.x * gridDim.x) {
         double x0 = i * dx;
         double x1 = (i + 1) * dx;
         double x_mid = (x0 + x1) / 2.0;
-        sum += function(x0) + 4.0 * function(x_mid) + function(x1);
+        double f0 = function(x0);
+        double f1 = function(x1);
+        double f_mid = function(x_mid);
+        
+        double sum = f0 + 4.0 * f_mid + f1 - compensation;
+        double t = local_sum + sum;
+        compensation = (t - local_sum) - sum;
+        local_sum = t;
     }
-    
-    result[tid] = sum * dx / 6.0;
+
+    partial_sum[tid] = local_sum;
+    __syncthreads();
+
+    // Reduction in shared memory
+    for (int stride = blockDim.x / 2; stride > 0; stride /= 2) {
+        if (tid < stride) {
+            partial_sum[tid] += partial_sum[tid + stride];
+        }
+        __syncthreads();
+    }
+
+    // Store the result in global memory
+    if (tid == 0) {
+        result[blockIdx.x] = partial_sum[0] * dx / 6.0;
+    }
 }
 
 int main() {
-    const int num_subintervals_start = 2;
-    const int num_subintervals_end = 1073741825;
-    const int num_threads_per_block = 64;
-    const int num_blocks = 3584;
-    const double a = 0.0; 
-    const double b = 1.0; 
+    const double a = 0.0;
+    const double b = 1.0;
 
-    std::ofstream error_file("error_cuda.txt");
-    std::ofstream time_file("time_cuda.txt");
+    std::ofstream output_file("../Results/output_simp_cuda.txt");
 
-    for (int num_subintervals = num_subintervals_start; num_subintervals <= num_subintervals_end; num_subintervals *= 2) {
+    for (int num_subintervals = 2; num_subintervals <= 1073741825; num_subintervals *= 2) {
 
-        double* result_cpu = new double[num_subintervals];
+        int num_blocks = (num_subintervals + num_threads_per_block - 1) / num_threads_per_block;
 
+        double* result_cpu = new double[num_blocks];
         double* result_gpu;
-        cudaMalloc((void**)&result_gpu, num_subintervals * sizeof(double));
-
+        cudaMalloc((void**)&result_gpu, num_blocks * sizeof(double));
 
         auto start_time = std::chrono::high_resolution_clock::now();
 
         integrate<<<num_blocks, num_threads_per_block>>>(result_gpu, num_subintervals, (b - a) / num_subintervals);
 
-        cudaMemcpy(result_cpu, result_gpu, num_subintervals * sizeof(double), cudaMemcpyDeviceToHost);
+        cudaMemcpy(result_cpu, result_gpu, num_blocks * sizeof(double), cudaMemcpyDeviceToHost);
 
         double final_result = 0.0;
-        for (int i = 0; i < num_subintervals; ++i) {
+        for (int i = 0; i < num_blocks; ++i) {
             final_result += result_cpu[i];
         }
 
@@ -59,15 +81,13 @@ int main() {
         double pi = 3.141592653589793238462643383279502884197;
         double error = std::abs(final_result - pi);
 
-        error_file << num_subintervals << " " << error << std::endl;
-        time_file << num_subintervals << " " << execution_time << std::endl;
+        output_file << num_subintervals << " " << error << " " << execution_time << std::endl;
 
         delete[] result_cpu;
         cudaFree(result_gpu);
     }
 
-    error_file.close();
-    time_file.close();
+    output_file.close();
 
     return 0;
 }

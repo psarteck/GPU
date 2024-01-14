@@ -32,7 +32,7 @@ double monteCarlo2DIntegration(std::function<double(double, double)> func, doubl
     return integral;
 }
 
-void performComputation(double x_min, double x_max, double y_min, double y_max, long int n){
+void performComputation(double x_min, double x_max, double y_min, double y_max, long int n, std::ofstream& output_file) {
 
     auto start_time = std::chrono::high_resolution_clock::now();
     double result = monteCarlo2DIntegration(func, x_min, x_max, y_min, y_max, n);
@@ -41,37 +41,30 @@ void performComputation(double x_min, double x_max, double y_min, double y_max, 
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count() / 1000.0;
 
     double exact = 0.25;
-    double error = std::abs(result-exact)/exact;
+    double error = std::abs(result - exact) / exact;
 
-    std::string errorFilename = "error.txt";
-    std::string timeFilename = "time.txt";
-
-    std::ofstream errorFile(errorFilename, std::ios_base::app);  
-    std::ofstream timeFile(timeFilename, std::ios_base::app);    
-
-    if (errorFile.is_open() && timeFile.is_open()) {
-        errorFile << std::setprecision(20) << n << " " << error << std::endl;
-        timeFile << std::setprecision(20) << n << " " << duration << std::endl;
-
-        errorFile.close();
-        timeFile.close();
-    } else {
-        std::cerr << "Error: Unable to open files for writing." << std::endl;
-    }
+    output_file << std::setprecision(20) << n << " " << error << " " << duration << std::endl;
 }
 
-
 int main(int argc, char* argv[]) {
+    std::string outputFilename = "output_montecarlo_seq.txt";
+    std::ofstream outputFile(outputFilename, std::ios_base::app);
+
+    if (!outputFile.is_open()) {
+        std::cerr << "Error: Unable to open the output file for writing." << std::endl;
+        return 1;
+    }
 
     double x_min = 0.0, x_max = 1.0;
     double y_min = 0.0, y_max = 1.0;
 
-    int maxExponent = 27; 
+    int maxExponent = 27;
     for (int exp = 1; exp <= maxExponent; ++exp) {
         long int n = pow(2, exp);
-
-        performComputation(x_min, x_max, y_min, y_max, n);
+        performComputation(x_min, x_max, y_min, y_max, n, outputFile);
     }
+
+    outputFile.close();
 
     return 0;
 }
