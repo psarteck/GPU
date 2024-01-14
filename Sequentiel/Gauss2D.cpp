@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 
     int maxExponent = 14;
 
-    for (int exp = 1; exp <= maxExponent; ++exp) {
+    for (int exp = 4; exp <= maxExponent; ++exp) {
         int numPoints = pow(2, exp);
         performComputation(numPoints, outputFile);
     }

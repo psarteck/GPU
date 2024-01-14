@@ -55,7 +55,7 @@ int main() {
 
     std::ofstream output_file("../Results/output_simp_cuda.txt");
 
-    for (int num_subintervals = 2; num_subintervals <= 1073741825; num_subintervals *= 2) {
+    for (int num_subintervals = 16; num_subintervals <= 1073741825; num_subintervals *= 2) {
 
         int num_blocks = (num_subintervals + num_threads_per_block - 1) / num_threads_per_block;
 

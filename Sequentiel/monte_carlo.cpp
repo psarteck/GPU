@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
     double y_min = 0.0, y_max = 1.0;
 
     int maxExponent = 25;
-    for (int exp = 1; exp <= maxExponent; ++exp) {
+    for (int exp = 4; exp <= maxExponent; ++exp) {
         long int n = pow(2, exp);
         performComputation(x_min, x_max, y_min, y_max, n, outputFile);
     }

@@ -83,7 +83,7 @@ int main() {
     int num_blocks = 3584;
     int threads_per_block = 64;
 
-    for (int exp = 1; exp <= maxExponent; ++exp) {
+    for (int exp = 4; exp <= maxExponent; ++exp) {
         long long int n = static_cast<long long int>(std::pow(2, exp));
         performComputation(x_min, x_max, y_min, y_max, n, num_blocks, threads_per_block, outputFile);
     }

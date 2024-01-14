@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
     ofstream output_file("../Results/output_simp_seq.txt");
 
     if (output_file.is_open()) {
-        for (int exp = 1; exp <= maxExponent; ++exp) {
+        for (int exp = 4; exp <= maxExponent; ++exp) {
             long int n = pow(2, exp);
             performComputation(a, b, n, output_file);
         }
