@@ -413,6 +413,30 @@ Pour la méthode \textbf{Monte-Carlo}, les résultats des versions \textbf{OpenM
 \end{itemize}
 En somme, bien que chaque méthode ait réagi différemment à la parallélisation avec CUDA, l'utilisation de cette technologie s'avère prometteuse pour accélérer significativement les calculs numériques, surtout lorsque des volumes de données importants sont impliqués. Cette accélération des calculs, particulièrement observée dans les méthodes Gauss2D avec l'utilisation de CUDA, souligne l'intérêt de cette technologie lorsque l'objectif est de minimiser l'erreur numérique. La capacité à traiter des volumes de données importants dans des délais raisonnables offre la possibilité de réaliser des simulations avec des valeurs numériques élevées, facilitant ainsi la réduction de l'erreur associée aux calculs numériques. Cela renforce l'attrait de CUDA dans un contexte où la précision des résultats est cruciale.
 
+
+\subsection*{Comparaison des librairies}
+
+On peut enfin analyser les temps d'éxécution pour les différentes librairies et ceux pour chaque méthode. 
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.6\textwidth]{../Images/time_simp.png}
+    \caption{Méthode de Simpon}
+\end{figure}
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=0.6\textwidth]{../Images/time_montecarlo.png}
+  \caption{Méthode de Monte Carlo}
+\end{figure}
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=0.6\textwidth]{../Images/time_gauss.png}
+  \caption{Méthode de Gauss}
+\end{figure}
+
+
 \newpage
 \section{Quelques explications du code}
 
