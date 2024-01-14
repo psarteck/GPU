@@ -17,7 +17,7 @@ fi
 
 if [ $? -eq 0 ]; then
     for ((process=2; process<=$nprocess; process*=2)); do
-        i=2
+        i=16
         echo "Calcul sur $process processeur(s)"
         while [ $i -le $((2**14 + 1)) ]; do
             mpirun -np $process $exe_folder/gauss2DMPI.out $i 

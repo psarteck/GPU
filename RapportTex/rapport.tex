@@ -132,35 +132,6 @@ où $\xi_i$ et $\eta_j$ sont les points de quadrature et $w_{ij}$ sont les poids
 La méthode de quadrature Gaussienne 2D offre une précision supérieure à la quadrature de Gauss unidimensionnelle, et elle est souvent utilisée pour résoudre numériquement des intégrales sur des domaines bidimensionnels complexes.
 
 
-\subsection{Méthode de Runge-Kutta}
-
-
-
-La méthode de Runge-Kutta est une technique numérique utilisée pour résoudre des équations différentielles ordinaires (EDO). La forme la plus courante est la méthode de Runge-Kutta d'ordre 4 (RK4), qui est souvent utilisée en raison de son équilibre entre précision et complexité.
-
-Supposons que nous ayons une EDO du premier ordre sous la forme :
-\begin{align*}
-\frac{dy}{dt} = f(t, y)
-\end{align*}
-
-La méthode RK4 consiste en les étapes suivantes, où $h$ est la taille du pas de discrétisation :
-\begin{align*}
-k_1 &= h \cdot f(t_n, y_n) \\
-k_2 &= h \cdot f(t_n + \frac{h}{2}, y_n + \frac{k_1}{2}) \\
-k_3 &= h \cdot f(t_n + \frac{h}{2}, y_n + \frac{k_2}{2}) \\
-k_4 &= h \cdot f(t_n + h, y_n + k_3)
-\end{align*}
-
-La mise à jour de la solution à chaque pas est alors donnée par :
-\begin{align*}
-y_{n+1} = y_n + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4)
-\end{align*}
-
-où $y_n$ est la valeur de la solution à l'instant $t_n$.
-
-Cette méthode offre une meilleure précision par rapport aux méthodes de pas fixe plus simples, mais elle nécessite également plus de calculs. Cependant, elle est largement utilisée en pratique pour sa robustesse et sa polyvalence.
-
-
 \subsection{Méthode d'intégration de Monte-Carlo}
 
 La méthode d'intégration de Monte Carlo est une technique utilisée en mathématiques pour estimer des valeurs numériques complexes, notamment les intégrales de fonctions dans des domaines à plusieurs dimensions. Elle repose sur des principes probabilistes et tire son nom du célèbre casino de Monte Carlo à Monaco, associant le hasard à des calculs numériques.
@@ -269,7 +240,7 @@ Les outils OpenMP et MPI ont été utilisés avec un maximum de 8 processeurs, t
     \item GPU : Nividia RTX-3060
 \end{itemize}
 
-On présente ensuite une étude sur le temps d'éxécution en fonction du nombre de subdivision, ainsi qu'une étude sur l'erreur en fonction du nombre de subdivision et cela pour chaque méthode (Simpson, Runge Kutta, Gauss 2D, Monte Carlo) et pour chaque parallélisation (Cuda, OpenMP, MPI).
+On présente ensuite une étude sur le temps d'éxécution en fonction du nombre de subdivision, ainsi qu'une étude sur l'erreur en fonction du nombre de subdivision et cela pour chaque méthode (Simpson, Gauss 2D, Monte Carlo) et pour chaque parallélisation (Cuda, OpenMP, MPI).
 Nous affichons dans un premier temps tout les graphiques obtenus, une analyse sera donnée par la suite en partie (\ref{sec:analyse}).
 
 
@@ -356,45 +327,7 @@ Nous affichons dans un premier temps tout les graphiques obtenus, une analyse se
     \label{fig:simpMPI}
   \end{figure}
 
-\subsection{Runge Kutta}
-
-\subsubsection{Open MP}
-
-\begin{figure}[H]
-    \centering
-
-    \subcaptionbox{Erreur \label{fig:errRKMP}}{\includegraphics[width=0.45\linewidth]{../Images/error_RK_Op_MP.png}}%
-    \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{fig:timRKMP}}{\includegraphics[width=0.45\linewidth]{../Images/time_RK_Op_MP.png}}
-  
-    \caption{Méthode de Runge Kutta : Open MP}
-    \label{fig:RKMP}
-  \end{figure}
-
-\subsubsection{MPI}
-
-\begin{figure}[H]
-    \centering
-
-    \subcaptionbox{Erreur \label{fig:errRKMPI}}{\includegraphics[width=0.45\linewidth]{../Images/error_RK_MPI.png}}%
-    \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{fig:timRKMPI}}{\includegraphics[width=0.45\linewidth]{../Images/time_RK_MPI.png}}
-  
-    \caption{Méthode de Runge Kutta : MPI}
-    \label{fig:RKMPI}
-  \end{figure}
-\subsubsection{Cuda}
-\begin{figure}[H]
-    \centering
-
-    \subcaptionbox{Erreur \label{fig:errRKMPI}}{\includegraphics[width=0.45\linewidth]{../Images/error_RK_cuda.png}}%
-    \hfill % Ajoute une espace horizontale entre les sous-figures
-    \subcaptionbox{Temps \label{fig:timRKMPI}}{\includegraphics[width=0.45\linewidth]{../Images/time_RK_cuda.png}}
-  
-    \caption{Méthode de Runge Kutta : MPI}
-    \label{fig:RKMPI}
-  \end{figure}
-\subsection{Monte Carlo} 
+  \subsection{Monte Carlo} 
 
 \subsubsection{Open MP}
 
@@ -455,17 +388,16 @@ Dans la version \textbf{OpenMP} de \textbf{Gauss2D}, l'erreur est cohérente en 
 
 En ce qui concerne la version \textbf{MPI} de \textbf{Gauss2D}, un coût de communication entre les processus est clairement perceptible, avec une légère détérioration de l'erreur lorsque le nombre de processus augmente.
 
-Pour la méthode \textbf{Runge-Kutta}, tant sur \textbf{OpenMP} que sur \textbf{MPI}, aucune différence majeure n'est observée dans l'erreur en fonction du nombre de processus. De plus, l'erreur diminue conformément au nombre de subdivisions, comme anticipé.
 
 Pour la méthode \textbf{Monte-Carlo}, les résultats des versions \textbf{OpenMP} et \textbf{MPI} sont conformes aux attentes. Étant donné que la méthode repose sur des probabilités, l'erreur peut être imprévisible pour un faible nombre de points, mais diminue rapidement avec leur augmentation.
 
 \subsection*{Cuda}
 \begin{itemize}
     \item \textbf{Méthode de Simpson :} Pour cette méthode, on observe une amélioration légère mais non significative de l'erreur avec CUDA. Dans les deux cas, parallélisé et séquentiel, l'erreur converge rapidement vers des valeurs de l'ordre de $10^{-14}$ à $10^{-15}$. Cependant, le temps de calcul avec CUDA devient plus long lorsque le nombre de subdivisions est suffisamment grand. Cette augmentation du temps de calcul s'explique par le fait que le nombre de blocs reste constant indépendamment du nombre de subdivisions. Une adaptation du nombre de blocs en fonction du nombre de subdivisions aurait été nécessaire, ou une augmentation du nombre de threads par bloc aurait pu être envisagée pour optimiser les performances.
-    \item \textbf{Méthode Gauss2D et RK4 :} L'erreur demeure identique dans les deux cas, cependant, la version parallélisée avec CUDA se distingue par une nette accélération, particulièrement notable pour un nombre très élevé de points.
+    \item \textbf{Méthode Gauss2D} L'erreur demeure identique dans les deux cas, cependant, la version parallélisée avec CUDA se distingue par une nette accélération, particulièrement notable pour un nombre très élevé de points.
     \item \textbf{Méthode Monte-Carlo :} L'erreur est légèrement plus importante avec CUDA, mais elle décroît significativement plus rapidement que dans la version séquentielle. De plus, la version séquentielle atteint rapidement ses limites en termes de temps de calcul, tandis qu'avec CUDA, ce problème survient seulement pour des valeurs extrêmement élevées ($2^{39}$). Il est crucial de noter que la génération de nombres aléatoires sur CPU n'est pas réalisée de la même manière que sur GPU.
 \end{itemize}
-En somme, bien que chaque méthode ait réagi différemment à la parallélisation avec CUDA, l'utilisation de cette technologie s'avère prometteuse pour accélérer significativement les calculs numériques, surtout lorsque des volumes de données importants sont impliqués. Cette accélération des calculs, particulièrement observée dans les méthodes Gauss2D et RK4 avec l'utilisation de CUDA, souligne l'intérêt de cette technologie lorsque l'objectif est de minimiser l'erreur numérique. La capacité à traiter des volumes de données importants dans des délais raisonnables offre la possibilité de réaliser des simulations avec des valeurs numériques élevées, facilitant ainsi la réduction de l'erreur associée aux calculs numériques. Cela renforce l'attrait de CUDA dans un contexte où la précision des résultats est cruciale.
+En somme, bien que chaque méthode ait réagi différemment à la parallélisation avec CUDA, l'utilisation de cette technologie s'avère prometteuse pour accélérer significativement les calculs numériques, surtout lorsque des volumes de données importants sont impliqués. Cette accélération des calculs, particulièrement observée dans les méthodes Gauss2D avec l'utilisation de CUDA, souligne l'intérêt de cette technologie lorsque l'objectif est de minimiser l'erreur numérique. La capacité à traiter des volumes de données importants dans des délais raisonnables offre la possibilité de réaliser des simulations avec des valeurs numériques élevées, facilitant ainsi la réduction de l'erreur associée aux calculs numériques. Cela renforce l'attrait de CUDA dans un contexte où la précision des résultats est cruciale.
 
 \newpage
 \section{Quelques explications du code}
@@ -479,7 +411,6 @@ Des scripts bash sont disponibles dans le dossier `Bashs`, ils permettent de lan
 \begin{itemize}
   \item Simpson : 
   \item Gauss2D :
-  \item Runge Kutta 
   \item MonteCarlo 
 \end{itemize}
 
@@ -510,7 +441,7 @@ Pour chaque méthode, un script PowerShell est fourni et est construit de la man
 La librairie Eigen est fournie dans le dossier cuda pour éviter tout problème de bibliothèques.
 
 \newpage
-\section{Conclusion - Perpesctive}
+\section{Conclusion - Perspective}
 Ce projet a permis d'explorer et de comparer différentes méthodes de calcul numérique, en mettant particulièrement l'accent sur la parallélisation avec OpenMP, MPI et CUDA. Chaque méthode a ses avantages et ses inconvénients, et le choix de la parallélisation dépend largement de la nature du problème et des ressources matérielles disponibles.
 
 L'utilisation d'OpenMP pour paralléliser des tâches sur CPU offre une approche simple et efficace pour exploiter les capacités multi-cœurs des processeurs. MPI, en revanche, offre une solution robuste pour la programmation parallèle distribuée sur des clusters de machines. La parallélisation avec CUDA sur GPU offre une puissance de calcul massive, mais nécessite une gestion minutieuse de la mémoire et une compréhension approfondie de l'architecture GPU.

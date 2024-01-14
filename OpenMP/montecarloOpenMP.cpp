@@ -12,6 +12,10 @@ double func(double x, double y) {
     return x * y;
 }
 
+double f3(double x, double y) {
+    return x * y * cos(x) * sin(2 * y);
+}
+
 //same seed per thread
 /*double monteCarlo2DIntegration(std::function<double(double, double)> func, double x_min, double x_max, double y_min, double y_max, int num_samples) {
     std::random_device rd;
@@ -81,12 +85,13 @@ int main(int argc, char * argv[]) {
 
     double startTime = omp_get_wtime();
 
-    double result = monteCarlo2DIntegration(func, x_min, x_max, y_min, y_max, numPoints);
+    double result = monteCarlo2DIntegration(f3, x_min, x_max, y_min, y_max, numPoints);
 
     double duration = omp_get_wtime() - startTime;
 
 
-    double ex = 0.25;
+    // double ex = 0.25;
+    doubel ex = 13.1913267088667;
     double error = abs(result - ex)/abs(ex);
 
     std::cout << std::setprecision(20) << "Result: " << result << std::endl;
