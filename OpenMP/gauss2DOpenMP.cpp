@@ -21,37 +21,17 @@ double f3(double x, double y){
     return x*y*cos(x)*sin(2*y);
 }
 
-void computeGauss2DPointsWeights(MatrixXd& points, MatrixXd& weights, int numPoints) {
-
-    #pragma omp parallel for collapse(2)
-    for (int i = 0; i < numPoints; ++i) {
-        for (int j = 0; j < numPoints; ++j) {
-            double xi = -1.0 + 2.0 * (i + 0.5) / numPoints;
-            double eta = -1.0 + 2.0 * (j + 0.5) / numPoints;
-            double wi = 2.0 / numPoints;
-
-                points(i, 0) = xi;
-                points(j, 1) = eta;
-                weights(i) = wi;
-        }
-    }
-}
-
-
-
 double gauss2DIntegration(double a1, double b1, double a2, double b2, int numPoints, double (*func)(double,double)) {
-    MatrixXd points(numPoints, 2);
-    MatrixXd weights(numPoints, 1);
-
-    computeGauss2DPointsWeights(points, weights, numPoints);
 
     double result = 0.0;
-
-    #pragma omp parallel for reduction(+:result) collapse(2)
+    double weights = 2.0 / numPoints;
+    #pragma omp parallel for reduction(+:result)
     for (int i = 0; i < numPoints; ++i) {
+        // double xi = -1.0 + 2.0 * (double(i) + 0.5) / numPoints;
         for (int j = 0; j < numPoints; ++j) {
-            result += weights(i) * weights(j) * func((points(i, 0) + 1) / 2.0 * (b1 - a1) + a1,
-                                                   (points(j, 1) + 1) / 2.0 * (b2 - a2) + a2);
+            // double xj = -1.0 + 2.0 * (double(j) + 0.5) / numPoints;
+            result += weights * weights * func(((-1.0 + 2.0 * (double(i) + 0.5) / numPoints) + 1) / 2.0 * (b1 - a1) + a1,
+                                                   ((-1.0 + 2.0 * (double(j) + 0.5) / numPoints) + 1) / 2.0 * (b2 - a2) + a2);
         }
     }
 
