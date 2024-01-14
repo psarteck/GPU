@@ -17,7 +17,7 @@ if [ $? -eq 0 ]; then
         i=1024
         while [ $i -le $((2**33 + 1)) ]; do
             mpirun -np $process $exe_folder/./simpsonMPI.out $i $process
-            i=$((i * 10)) 
+            i=$((i * 2)) 
         done 
     done
     python3 $python_folder/graph.py "simp_MPI"
