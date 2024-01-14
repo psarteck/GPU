@@ -14,10 +14,10 @@ if ($env:OSTYPE -like "darwin*") {
 }
 
 if ($?) {
-    for ($process = 1; $process -le $nprocess; $process++) {
+    for ($process = 2; $process -le $nprocess; $process*=2) {
         Write-Output "Calcul sur $process processeur(s)"
-        $i = 256
-        while ($i -le 4200) {
+        $i = 2
+        while ($i -le ([math]::Pow(2, 14) + 1)) {
             & "$exe_folder\gauss2DOpenMP.exe" $i $process
             $i *= 2
         }

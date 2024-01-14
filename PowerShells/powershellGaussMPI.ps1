@@ -14,10 +14,10 @@ if ($env:OSTYPE -like "darwin*") {
 }
 
 if ($?) {
-    for ($process = 1; $process -le $nprocess; $process++) {
-        $i = 1024
+    for ($process = 2; $process -le $nprocess; $process*=2) {
         Write-Output "Calcul sur $process processeur(s)"
-        while ($i -le 8400) {
+        $i = 2
+        while ($i -le ([math]::Pow(2, 14) + 1)) {
             mpiexec -np $process $exe_folder\gauss2DMPI.exe $i
             $i *= 2
         }

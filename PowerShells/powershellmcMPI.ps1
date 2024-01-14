@@ -14,10 +14,10 @@ if ($env:OSTYPE -like "darwin*") {
 }
 
 if ($?) {
-    for ($process = 1; $process -le $nprocess; $process++) {
+    for ($process = 2; $process -le $nprocess; $process*=2) {
         Write-Output "Calcul sur $process processeur(s)"
-        $i = 1024
-        while ($i -le 10000000) {
+        $i = 2
+        while ($i -le ([math]::Pow(2, 25) + 1)) {
             mpiexec -np $process "$exe_folder\montecarloMPI.exe" $i
             $i *= 2
         }

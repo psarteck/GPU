@@ -10,12 +10,12 @@ Remove-Item "$results_folder\simp_MPI*" -Force
 mpic++ "$src_folder\simpsonMPI.cpp" -o "$exe_folder\simpsonMPI.exe"
 
 if ($?) {
-    for ($process = 1; $process -le $nprocess; $process++) {
+    for ($process = 2; $process -le $nprocess; $process*=2) {
         Write-Output "Calcul sur $process processeur(s)"
-        $i = 10000
-        while ($i -le 100000000) {
+        $i = 2
+        while ($i -le ([math]::Pow(2, 32) + 1)) {
             mpiexec -np $process "$exe_folder\simpsonMPI.exe" $i $process
-            $i *= 10
+            $i *= 2
         }
     }
     python3 "$python_folder\graph.py" "simp_MPI"
