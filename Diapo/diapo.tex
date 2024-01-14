@@ -18,7 +18,7 @@
 
 \begin{document}
 \begin{frame}
-    \includegraphics[width=0.2\textwidth]{Images/univ-rennes1.png}
+    \includegraphics[width=0.2\textwidth]{../Images/univ-rennes1.png}
     \rule{\linewidth}{0.3mm} \\[0.4cm]
     \titlepage
     \rule{\linewidth}{0.3mm} \\[0.4cm]
@@ -76,44 +76,12 @@
             \iint_{R} f(x, y) \,dx\,dy \approx \sum_{i=1}^{n} \sum_{j=1}^{m} w_{ij} \cdot f(x_i, y_j)
             \end{align*}
         
-        \item Formule spécifique pour un quadrilatère :
-            \begin{align*}
-            \iint_{R} f(x, y) \,dx\,dy \approx & \sum_{i=1}^{n} \sum_{j=1}^{m} w_{ij} \cdot f\Bigg(\frac{1}{2}(1 + \xi_i)x\\
-             &+ \frac{1}{2}(1 - \xi_i)y, \frac{1}{2}(1 + \eta_j)x + \frac{1}{2}(1 - \eta_j)y\Bigg)
-            \end{align*}
-        
+        \item Ici on s'intéresse à la méthode de Gauss-Legendre avec des poids calculés comme suit : 
+        \begin{align*}
+            w_{ij} = \frac{2}{n}
+        \end{align*}
+        Avec $n$ le nombre de points.
         \item Offre une précision supérieure à la quadrature de Gauss unidimensionnelle.
-    \end{itemize}
-\end{frame}
-
-\subsection{Méthode de Runge-Kutta}
-\begin{frame}
-    \frametitle{Méthode de Runge-Kutta (RK4) pour les EDO}
-    \small
-    \begin{itemize}
-        \item Technique numérique pour résoudre des équations différentielles ordinaires (EDO).
-        
-        \item Méthode de Runge-Kutta d'ordre 4 (RK4) : équilibre entre précision et complexité.
-        
-        \item Forme générale d'une EDO du premier ordre :
-            \[
-            \frac{dy}{dt} = f(t, y)
-            \]
-        
-        \item Étapes de la méthode RK4 :
-            \begin{align*}
-            k_1 &= h \cdot f(t_n, y_n) \\
-            k_2 &= h \cdot f(t_n + \frac{h}{2}, y_n + \frac{k_1}{2}) \\
-            k_3 &= h \cdot f(t_n + \frac{h}{2}, y_n + \frac{k_2}{2}) \\
-            k_4 &= h \cdot f(t_n + h, y_n + k_3)
-            \end{align*}
-        
-        \item Mise à jour de la solution à chaque pas :
-            \begin{align*}
-             y_{n+1} = y_n + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4)
-            \end{align*}
-        
-        \item Offre une meilleure précision que des méthodes de pas fixe plus simples, largement utilisée pour sa robustesse et polyvalence.
     \end{itemize}
 \end{frame}
 
@@ -178,23 +146,7 @@
 \begin{frame}
     \frametitle{Comparaison des méthodes numériques}
 
-    \begin{columns}[T] % Alignement des colonnes en haut
-        \begin{column}{.45\textwidth}
-            \underline{\textbf{Runge-Kutta (RK4)}}
-            \begin{itemize}
-                \item[+] Précision élevée.
-                \item[+] Adaptée aux EDO.
-                \item[-] Plus de calculs.
-            \end{itemize}
-            \vspace{10pt}
-            \underline{\textbf{Gaussienne 2D}}
-            \begin{itemize}
-                \item[+] Haute précision.
-                \item[+] Adaptée aux intégrales bidimensionnelles.
-                \item[-] Plus complexe.
-            \end{itemize}
-        \end{column}
-        
+    \begin{columns}[T] % Alignement des colonnes en haut        
         \begin{column}{.45\textwidth}
             \underline{\textbf{Simpson}}
             \begin{itemize}
@@ -208,6 +160,14 @@
                 \item[+] Grande flexibilité.
                 \item[+] Adaptée aux problèmes complexes.
                 \item[-] Précision dépend du nombre d'échantillons.
+            \end{itemize}
+        \end{column}
+        \begin{column}{.45\textwidth}
+            \underline{\textbf{Gaussienne 2D}}
+            \begin{itemize}
+                \item[+] Haute précision.
+                \item[+] Adaptée aux intégrales bidimensionnelles.
+                \item[-] Plus complexe.
             \end{itemize}
         \end{column}
     \end{columns}
@@ -239,11 +199,6 @@
                 \item Parallélisation de la génération de points et de poids avec \\\texttt{\#pragma omp parallel for collapse(2)}.
                 \item L'utilisation de \texttt{collapse(2)} exploite le parallélisme dans les deux boucles imbriquées, améliorant l'efficacité.
             \end{itemize}
-        \item \textbf{Runge-Kutta }
-            \begin{itemize}
-                \item Boucle temporelle parallélisée avec \texttt{\#pragma omp parallel for}.
-                \item Copie temporaire des données (\texttt{std::vector<double> tempU(u)}) utilisée pour chaque thread, évitant les dépendances de données et optimisant les calculs.
-            \end{itemize}
         \item \textbf{Intégration de Monte Carlo }
             \begin{itemize}
                 \item La boucle de génération de points aléatoires est parallélisée avec \texttt{\#pragma omp parallel for reduction(+:total)}.
@@ -267,11 +222,6 @@
             \begin{itemize}
                 \item Parallélisation de la génération de points et de poids.
                 \item Utilisation de MPI\_Sendrecv pour l'échange des bords entre les processus.
-            \end{itemize}
-        \item \textbf{Runge-Kutta}
-            \begin{itemize}
-                \item Division des données spatiales entre les processus.
-                \item Utilisation de MPI\_Gather pour collecter les résultats.
             \end{itemize}
         \item \textbf{Intégration Monte Carlo }
             \begin{itemize}
@@ -300,10 +250,6 @@
                 \item Deux kernel, un pour la génération de points et de poids, l'autre pour l'intégration
                 \item Nombre de block en fonction du nombre de points et des poids avec le nombre maximal de threads par block : 1024. 
             \end{itemize}
-        \item \textbf{Runge-Kutta}
-            \begin{itemize}
-                \item Nombre de block en fonction de la discrétisation et 64 threads par block.
-            \end{itemize}
         \item \textbf{Intégration Monte Carlo }
             \begin{itemize}
                 \item Nombre de block maximal disponible sur mon GPU : 8584 et 64 threads par block.
@@ -326,25 +272,22 @@
     \frametitle{Résultats pour OpenMP}
         \small
     \begin{tabular}{cc}
-        \includegraphics[width=0.45\linewidth]{Images/time_simp_Op_MP.png} &
-        \includegraphics[width=0.45\linewidth]{Images/error_simp_Op_MP.png} \\
+        \includegraphics[width=0.45\linewidth]{../Images/time_simp_Op_MP.png} &
+        \includegraphics[width=0.45\linewidth]{../Images/error_simp_Op_MP.png} \\
         Simpson Temps & Simpson Erreur \\
-        \includegraphics[width=0.45\linewidth]{Images/time_gauss_Op_MP.png} &
-        \includegraphics[width=0.45\linewidth]{Images/error_gauss_Op_MP.png} \\
+        \includegraphics[width=0.45\linewidth]{../Images/time_gauss_Op_MP.png} &
+        \includegraphics[width=0.45\linewidth]{../Images/error_gauss_Op_MP.png} \\
         Gauss 2D Temps & Gauss 2D Erreur \\
     \end{tabular}
         
 \end{frame}
 
 \begin{frame}
-    \frametitle{OpenMP}
+    \frametitle{Résultats pour OpenMP}
         \small
     \begin{tabular}{cc}
-        \includegraphics[width=0.45\linewidth]{Images/time_RK_Op_MP.png} &
-        \includegraphics[width=0.45\linewidth]{Images/error_RK_Op_MP.png} \\
-        Runge Kutta Temps & Runge Kutta Erreur \\
-        \includegraphics[width=0.45\linewidth]{Images/time_montecarlo_Op_MP.png} &
-        \includegraphics[width=0.45\linewidth]{Images/error_montecarlo_Op_MP.png} \\
+        \includegraphics[width=0.45\linewidth]{../Images/time_montecarlo_Op_MP.png} &
+        \includegraphics[width=0.45\linewidth]{../Images/error_montecarlo_Op_MP.png} \\
         Monte Carlo Temps & Monte Carlo Erreur\\
     \end{tabular}
         
@@ -352,22 +295,22 @@
         
         % \begin{figure}
         %     \begin{minipage}{0.4\linewidth}
-        %         \includegraphics[width=\linewidth]{Images/time_gauss_Op_MP.png}
+        %         \includegraphics[width=\linewidth]{../Images/time_gauss_Op_MP.png}
         %         \caption{Gauss 2D}
         %     \end{minipage}\hfill
         %     \begin{minipage}{0.4\linewidth}
-        %         \includegraphics[width=\linewidth]{Images/time_simp_Op_MP.png}
+        %         \includegraphics[width=\linewidth]{../Images/time_simp_Op_MP.png}
         %         \caption{Simpson}
         %     \end{minipage}
         % \end{figure}
     
         % \begin{figure}
         %     \begin{minipage}{0.4\linewidth}
-        %         \includegraphics[width=\linewidth]{Images/time_RK_Op_MP.png}
+        %         \includegraphics[width=\linewidth]{../Images/time_RK_Op_MP.png}
         %         \caption{Runge Kutta}
         %     \end{minipage}\hfill
         %     \begin{minipage}{0.4\linewidth}
-        %         \includegraphics[width=\linewidth]{Images/time_montecarlo_Op_MP.png}
+        %         \includegraphics[width=\linewidth]{../Images/time_montecarlo_Op_MP.png}
         %         \caption{Monte Carlo}
         %     \end{minipage}
         % \end{figure}
@@ -381,25 +324,22 @@
     \frametitle{Résultats pour MPI}
         \small
     \begin{tabular}{cc}
-        \includegraphics[width=0.45\linewidth]{Images/time_simp_MPI.png} &
-        \includegraphics[width=0.45\linewidth]{Images/error_simp_MPI.png} \\
+        \includegraphics[width=0.45\linewidth]{../Images/time_simp_MPI.png} &
+        \includegraphics[width=0.45\linewidth]{../Images/error_simp_MPI.png} \\
         Simpson Temps & Simpson Erreur \\
-        \includegraphics[width=0.45\linewidth]{Images/time_gauss_MPI.png} &
-        \includegraphics[width=0.45\linewidth]{Images/error_gauss_MPI.png} \\
+        \includegraphics[width=0.45\linewidth]{../Images/time_gauss_MPI.png} &
+        \includegraphics[width=0.45\linewidth]{../Images/error_gauss_MPI.png} \\
         Gauss 2D Temps & Gauss 2D Erreur \\
     \end{tabular}
         
 \end{frame}
 
 \begin{frame}
-    \frametitle{MPI}
+    \frametitle{Résultats pour MPI}
         \small
     \begin{tabular}{cc}
-        \includegraphics[width=0.45\linewidth]{Images/time_RK_MPI.png} &
-        \includegraphics[width=0.45\linewidth]{Images/error_RK_MPI.png} \\
-        Runge Kutta Temps & Runge Kutta Erreur \\
-        \includegraphics[width=0.45\linewidth]{Images/time_montecarlo_MPI.png} &
-        \includegraphics[width=0.45\linewidth]{Images/error_montecarlo_MPI.png} \\
+        \includegraphics[width=0.45\linewidth]{../Images/time_montecarlo_MPI.png} &
+        \includegraphics[width=0.45\linewidth]{../Images/error_montecarlo_MPI.png} \\
         Monte Carlo Temps & Monte Carlo Erreur\\
     \end{tabular}
         
@@ -411,25 +351,22 @@
     \frametitle{Résultats pour CUDA}
         \small
     \begin{tabular}{cc}
-        \includegraphics[width=0.45\linewidth]{Images/time_simpson_cuda.png} &
-        \includegraphics[width=0.45\linewidth]{Images/error_simpson_cuda.png} \\
+        \includegraphics[width=0.45\linewidth]{../Images/time_simpson_cuda.png} &
+        \includegraphics[width=0.45\linewidth]{../Images/error_simpson_cuda.png} \\
         Simpson Temps & Simpson Erreur\\
-        \includegraphics[width=0.45\linewidth]{Images/time_Gauss2D_cuda.png} &
-        \includegraphics[width=0.45\linewidth]{Images/error_Gauss2D_cuda.png} \\
+        \includegraphics[width=0.45\linewidth]{../Images/time_Gauss2D_cuda.png} &
+        \includegraphics[width=0.45\linewidth]{../Images/error_Gauss2D_cuda.png} \\
         Gauss2D Temps & Gauss2D Erreur\\
     \end{tabular}
         
 \end{frame}
 
 \begin{frame}
-    \frametitle{CUDA}
+    \frametitle{Résultats pour CUDA}
         \small
     \begin{tabular}{cc}
-         \includegraphics[width=0.45\linewidth]{Images/time_RK_cuda.png} &
-         \includegraphics[width=0.45\linewidth]{Images/error_RK_cuda.png} \\
-        RK4 Temps & RK4 Erreur\\
-         \includegraphics[width=0.45\linewidth]{Images/time_monte_carlo_cuda.png} &
-         \includegraphics[width=0.45\linewidth]{Images/error_monte_carlo_cuda.png} \\
+         \includegraphics[width=0.45\linewidth]{../Images/time_monte_carlo_cuda.png} &
+         \includegraphics[width=0.45\linewidth]{../Images/error_monte_carlo_cuda.png} \\
         Monte Carlo Temps & Monte Carlo Erreur\\
     \end{tabular}
         

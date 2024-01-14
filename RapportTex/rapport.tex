@@ -110,7 +110,7 @@ La somme de ces approximations sur tous les sous-intervalles donne l'estimation 
 La méthode de Simpson est souvent plus précise que les méthodes de quadrature plus simples comme la méthode des rectangles, car elle prend en compte les variations de la fonction sur chaque sous-intervalle.
 
 
-\subsection{Méthode de Gauss 2D}
+\subsection{Méthode de Gauss-Legendre 2D}
 
 
 La méthode de quadrature Gaussienne en deux dimensions (Gauss 2D) est utilisée pour estimer numériquement l'intégrale d'une fonction $f(x, y)$ sur une région bidimensionnelle définie par $a \leq x \leq b$ et $c \leq y \leq d$.
@@ -122,12 +122,11 @@ Supposons que nous ayons une fonction à intégrer sur cette région. La méthod
 
 où $n$ et $m$ sont le nombre de points dans les directions $x$ et $y$, respectivement. Les points $x_i$ et $y_j$ sont les emplacements des points de quadrature, et $w_{ij}$ sont les poids associés à ces points.
 
-Une formule spécifique de quadrature Gaussienne 2D pour un quadrilatère est donnée par :
+Ici, nous avons pris en compte la méthode de Gauss-Legendre, ainsi, les poids $w_{i,j}$ sont alors calculé comme suit : 
 \begin{align*}
-\iint_{R} f(x, y) \,dx\,dy \approx \sum_{i=1}^{n} \sum_{j=1}^{m} w_{ij} \cdot f\left(\frac{1}{2}(1 + \xi_i)x + \frac{1}{2}(1 - \xi_i)y, \frac{1}{2}(1 + \eta_j)x + \frac{1}{2}(1 - \eta_j)y\right)
+  w_{i,j} =\frac{2}{n}
 \end{align*}
-
-où $\xi_i$ et $\eta_j$ sont les points de quadrature et $w_{ij}$ sont les poids associés.
+Où ici, $n$ est le nombre de point choisit dans l'intervalle.
 
 La méthode de quadrature Gaussienne 2D offre une précision supérieure à la quadrature de Gauss unidimensionnelle, et elle est souvent utilisée pour résoudre numériquement des intégrales sur des domaines bidimensionnels complexes.
 
@@ -243,6 +242,21 @@ Les outils OpenMP et MPI ont été utilisés avec un maximum de 8 processeurs, t
 On présente ensuite une étude sur le temps d'éxécution en fonction du nombre de subdivision, ainsi qu'une étude sur l'erreur en fonction du nombre de subdivision et cela pour chaque méthode (Simpson, Gauss 2D, Monte Carlo) et pour chaque parallélisation (Cuda, OpenMP, MPI).
 Nous affichons dans un premier temps tout les graphiques obtenus, une analyse sera donnée par la suite en partie (\ref{sec:analyse}).
 
+A noter que les fonctions utilisées pour cette étude ainsi que leur intervalle d'étude sont les suivants : 
+
+\begin{itemize}
+  \item \underline{Cas 1D (Simpson) :}
+  \begin{align*}
+    f(x) = \frac{4}{ (1+ x^2)}, \qquad \forall x \in [0,1]
+  \end{align*}
+  \item \underline{Cas 2D (Gauss Monte-Carlo) :} 
+  \begin{align*}
+    f(x,y) = x y \cos(x) \sin(2y) , \qquad \forall (x,y) \in [0,10]\times[0,10]
+  \end{align*}
+\end{itemize}
+
+
+
 
 \subsection{Méthode de Simpson}
 
@@ -287,7 +301,7 @@ Nous affichons dans un premier temps tout les graphiques obtenus, une analyse se
     \label{fig:simpMPI}
   \end{figure}
 
-\subsection{Gauss}
+\subsection{Gauss 2D}
 
 \subsubsection{Open MP}
 

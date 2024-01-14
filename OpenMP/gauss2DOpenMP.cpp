@@ -30,12 +30,9 @@ void computeGauss2DPointsWeights(MatrixXd& points, MatrixXd& weights, int numPoi
             double eta = -1.0 + 2.0 * (j + 0.5) / numPoints;
             double wi = 2.0 / numPoints;
 
-            // #pragma omp critical
-            // {
                 points(i, 0) = xi;
                 points(j, 1) = eta;
                 weights(i) = wi;
-            // }
         }
     }
 }
@@ -82,13 +79,7 @@ int main(int argc, char * argv[]) {
     double ex = 13.1913267088667;
     double error = abs(result - ex);
 
-    std::cout << std::setprecision(20) << "Result: " << result << std::endl;
-    std::cout << std::setprecision(20) << "Runtime: " << duration << " seconds" << std::endl;
-    std::cout << std::setprecision(20) << "Error: " << error << std::endl;
-
-
     std::string filename = "../Results/gauss_Op_MP_nbProc_" + std::to_string(numThreads) + ".txt";
-    std::cout << filename << std::endl;
 
     std::ofstream outFile(filename, std::ios_base::app);
 

@@ -7,7 +7,7 @@ python_folder="../CodesPython"
 
 nprocess=$(awk -F'=' '/Nb_Procs/{print $2}' ../parametres_Machine | tr -d ' ')
 
-rm $results_folder/montecarloMPI*
+rm $results_folder/montecarlo_MPI*
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     mpic++ -Xlinker -debug_snapshot $src_folder/montecarloMPI.cpp -o $exe_folder/montecarloMPI.out

@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <mpi.h>
 
+using namespace std;
+
 double function(double theta) {
     return sin(2 * theta) / ((sin(theta) + cos(theta)) * (sin(theta) + cos(theta)));
 }
@@ -34,12 +36,9 @@ int main(int argc, char** argv) {
 
     int n = (argc > 1) ? std::stoi(argv[1]) : 10000;
 
-    int size = (argc > 2) ? std::stoi(argv[2]) : 4;
-
-
     MPI_Init(0,0);
 
-    int rank;
+    int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
@@ -47,9 +46,17 @@ int main(int argc, char** argv) {
     double a = 0.0;
     double b = 1.0;
 
+    int remainder = n % size;
     int local_n = n / size;
+    int extra_points = rank < remainder ? 1 : 0;
+
+    local_n += extra_points;
+
     double local_a = a + rank * (b - a) / size;
     double local_b = local_a + (b - a) / size;
+
+
+    cout << "Proc = " << rank << ", local_a = " << local_a << ", local_b = " << local_b << endl;
 
     auto startTime = std::chrono::high_resolution_clock::now();
     double local_result = compositeSimpsons(local_a, local_b, local_n, &function2);

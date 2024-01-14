@@ -22,16 +22,17 @@ double f3(double x, double y) {
     return x * y * cos(x) * sin(2 * y);
 }
 
-double gauss2DIntegration(double a1, double b1, double a2, double b2, int numPoints, double (*func)(double, double)) {
+double gauss2DIntegration(double a1, double b1, double a2, double b2, int numPointsX, int numPointsY, double (*func)(double, double)) {
 
-    double weight = 2.0/numPoints;
+    double weightX = 2.0/double(numPointsX);
+    double weightY = 2.0/double(numPointsY);
     double result = 0.0;
 
-    for (int i = 0; i < numPoints; ++i) {
-        double xi = -1.0 + 2.0 * (i + 0.5) / numPoints;
-        for (int j = 0; j < numPoints; ++j) {
-            double xj = -1.0 + 2.0 * (j + 0.5) / numPoints;
-            result += weight * weight * func((xi + 1) / 2.0 * (b1 - a1) + a1,
+    for (int i = 0; i < numPointsX; ++i) {
+        double xi = -1.0 + 2.0 * (double(i) + 0.5) / double(numPointsX);
+        for (int j = 0; j < numPointsY; ++j) {
+            double xj = -1.0 + 2.0 * (double(j) + 0.5) / double(numPointsY);
+            result += weightX * weightY * func((xi + 1) / 2.0 * (b1 - a1) + a1,
                                                      (xj + 1) / 2.0 * (b2 - a2) + a2);
         }
     }
@@ -55,9 +56,6 @@ int main(int argc, char *argv[]) {
 
     int localNumPoints; 
 
-    while (numPoints % numProcesses != 0){
-        numPoints ++;
-    }
     localNumPoints = numPoints / numProcesses;
     int remainder = numPoints % numProcesses;
 
@@ -79,13 +77,18 @@ int main(int argc, char *argv[]) {
 
     double startTime = MPI_Wtime();
 
-    double localResult = gauss2DIntegration(local_x1, local_x2, local_y1, local_y2, localNumPoints, &f3);
+    double localResult;
+    if (x2-x1 >= y2-y1){
+        localResult = gauss2DIntegration(local_x1, local_x2, local_y1, local_y2, localNumPoints, numPoints, &f3);
+    }
+    else{
+        localResult = gauss2DIntegration(local_x1, local_x2, local_y1, local_y2, numPoints, localNumPoints, &f3);
+    }
 
     double duration = MPI_Wtime() - startTime;
 
     double globalResult;
-    // MPI_Reduce(&localResult, &globalResult, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-    MPI_Allreduce(&localResult, &globalResult, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Reduce(&localResult, &globalResult, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
     if (processRank == 0) {
 
