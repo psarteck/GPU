@@ -62,8 +62,8 @@ void performComputation(int numPoints, std::ofstream& output_file) {
 }
 
 int main(int argc, char* argv[]) {
-    std::string outputFilename = "output_gauss_seq.txt";
-    std::ofstream outputFile(outputFilename, std::ios_base::app);
+    std::string outputFilename = "../Results/output_gauss_seq.txt";
+    std::ofstream outputFile(outputFilename);
 
     if (!outputFile.is_open()) {
         std::cerr << "Error: Unable to open the output file for writing." << std::endl;

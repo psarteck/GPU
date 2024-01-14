@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
     double b = 1;
 
     int maxExponent = 30;
-    ofstream output_file("../Results/output_simp_seq.txt", ios::app);
+    ofstream output_file("../Results/output_simp_seq.txt");
 
     if (output_file.is_open()) {
         for (int exp = 1; exp <= maxExponent; ++exp) {

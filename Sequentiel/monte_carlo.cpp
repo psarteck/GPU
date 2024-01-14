@@ -47,8 +47,8 @@ void performComputation(double x_min, double x_max, double y_min, double y_max, 
 }
 
 int main(int argc, char* argv[]) {
-    std::string outputFilename = "output_montecarlo_seq.txt";
-    std::ofstream outputFile(outputFilename, std::ios_base::app);
+    std::string outputFilename = "../Results/output_montecarlo_seq.txt";
+    std::ofstream outputFile(outputFilename);
 
     if (!outputFile.is_open()) {
         std::cerr << "Error: Unable to open the output file for writing." << std::endl;
@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
     double x_min = 0.0, x_max = 1.0;
     double y_min = 0.0, y_max = 1.0;
 
-    int maxExponent = 27;
+    int maxExponent = 25;
     for (int exp = 1; exp <= maxExponent; ++exp) {
         long int n = pow(2, exp);
         performComputation(x_min, x_max, y_min, y_max, n, outputFile);
