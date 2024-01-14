@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Eigen/Dense"
+#include "eigen-3.4.0\eigen-3.4.0\Eigen\Dense"
 #include <fstream>
 #include <iomanip>
 #include <chrono>
@@ -9,12 +9,6 @@ using namespace Eigen;
 using namespace std;
 using namespace std::chrono;
 
-double f(double x, double y) {
-    return x * y;
-}
-double f2(double x, double y) {
-    return cos(x) * sin(2 * y);
-}
 
 double f3(double x, double y) {
     return x * y * cos(x) * sin(2 * y);
@@ -65,8 +59,8 @@ void performComputation(int numPoints) {
     double ex = 13.1913267088667;
     double error = abs(result - ex);
 
-    std::string errorFilename = "../Results/error.txt";
-    std::string timeFilename = "../Results/time.txt";
+    std::string errorFilename = "error.txt";
+    std::string timeFilename = "time.txt";
 
     std::ofstream errorFile(errorFilename, std::ios_base::app);  
     std::ofstream timeFile(timeFilename, std::ios_base::app);    
@@ -83,7 +77,7 @@ void performComputation(int numPoints) {
 }
 
 int main(int argc, char* argv[]) {
-    int maxExponent = 30; // 2^30
+    int maxExponent = 14; 
 
     for (int exp = 1; exp <= maxExponent; ++exp) {
         int numPoints = pow(2, exp);

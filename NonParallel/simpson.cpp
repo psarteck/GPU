@@ -9,8 +9,8 @@ using std::string;
 using namespace std;
 using namespace std::chrono;
 
-double funcCosSin(double x) {
-    return 5 * (cos(M_PI * x) * sin(2 * M_PI * x));
+double function(double x) {
+    return 4.0 / (1.0 + x * x);
 }
 
 double compositeSimpsons_3_8(double a, double b, long int n, double (*func)(double)) {
@@ -36,31 +36,19 @@ double compositeSimpsons_3_8(double a, double b, long int n, double (*func)(doub
     return 3.0 * integral * h / 8.0;
 }
 
-void performComputation(double a, double b, long int n) {
+void performComputation(double a, double b, long int n, ofstream& output_file) {
     auto start_time = high_resolution_clock::now();
-    double result = compositeSimpsons_3_8(a, b, n, &funcCosSin);
+    double result = compositeSimpsons_3_8(a, b, n, &function);
     auto end_time = high_resolution_clock::now();
 
     auto duration = duration_cast<milliseconds>(end_time - start_time).count() / 1000.0;
 
-    double val_exacte = 20 / (3 * M_PI);
+    double error = abs(result - M_PI);
 
-    double error = abs(result - val_exacte);
-
-    std::string errorFilename = "../Results/error.txt";
-    std::string timeFilename = "../Results/time.txt";
-
-    std::ofstream errorFile(errorFilename, std::ios_base::app);
-    std::ofstream timeFile(timeFilename, std::ios_base::app);
-
-    if (errorFile.is_open() && timeFile.is_open()) {
-        errorFile << std::setprecision(20) << n << " " << error << std::endl;
-        timeFile << std::setprecision(20) << n << " " << duration << std::endl;
-
-        errorFile.close();
-        timeFile.close();
+    if (output_file.is_open()) {
+        output_file << std::setprecision(20) << n << " " << error << " " << duration << std::endl;
     } else {
-        std::cerr << "Erreur : Impossible d'ouvrir les fichiers pour écriture." << std::endl;
+        cerr << "Erreur : Impossible d'écrire dans le fichier de sortie." << endl;
     }
 }
 
@@ -69,13 +57,19 @@ int main(int argc, char* argv[]) {
     double a = 0;
     double b = 1;
 
-    int maxExponent = 30; // 2^30
-    for (int exp = 1; exp <= maxExponent; ++exp) {
-        long int n = pow(2, exp);
+    int maxExponent = 30;
+    ofstream output_file("../Results/output_simp_seq.txt", ios::app);
 
-        performComputation(a, b, n);
+    if (output_file.is_open()) {
+        for (int exp = 1; exp <= maxExponent; ++exp) {
+            long int n = pow(2, exp);
+            performComputation(a, b, n, output_file);
+        }
+
+        output_file.close();
+    } else {
+        cerr << "Erreur : Impossible d'ouvrir le fichier de sortie pour écriture." << endl;
     }
 
     return 0;
 }
-
