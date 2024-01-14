@@ -7,8 +7,6 @@ g++ monte_carlo.cpp
 ./a.exe
 Remove-Item -Path "a.exe" -Force
 # Exécution du script Python
-python graph_cuda.py
-Rename-Item -Path "error.png" -NewName "error_monte_carlo_cuda.png" -Force
-Rename-Item -Path "time.png" -NewName "time_monte_carlo_cuda.png" -Force
-Move-Item -Path "error_monte_carlo_cuda.png", "time_monte_carlo_cuda.png" -Destination "..\Images\" -Force
+python graph_cuda.py montecarlo
+Move-Item -Path "output_montecarlo_cuda.txt" -Destination "..\Results\" -Force
 Remove-Item -Path "*.txt" -Force

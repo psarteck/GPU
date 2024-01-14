@@ -7,8 +7,6 @@ g++ -w Gauss2D.cpp
 ./a.exe
 Remove-Item -Path "a.exe" -Force
 # Exécution du script Python
-python graph_cuda.py
-Rename-Item -Path "error.png" -NewName "error_Gauss2D_cuda.png" -Force
-Rename-Item -Path "time.png" -NewName "time_Gauss2D_cuda.png" -Force
-Move-Item -Path "error_Gauss2D_cuda.png", "time_Gauss2D_cuda.png" -Destination "..\Images\" -Force
+python graph_cuda.py gauss
+Move-Item -Path "output_gauss_cuda.txt" -Destination "..\Results\" -Force
 Remove-Item -Path "*.txt" -Force
