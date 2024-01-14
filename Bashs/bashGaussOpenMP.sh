@@ -16,10 +16,10 @@ else
 fi
 
 if [ $? -eq 0 ]; then
-    for ((process=1; process<=$nprocess; process++)); do
+    for ((process=2; process<=$nprocess; process*=2)); do
         echo "Calcul sur $process processeur(s)"
-        i=256
-        while [ $i -le 4200 ]; do
+        i=2
+        while [ $i -le $((2**14 + 1)) ]; do
             $exe_folder/./gauss2DOpenMP.out $i $process
             i=$((i * 2)) 
         done 

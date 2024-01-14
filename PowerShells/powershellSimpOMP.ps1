@@ -17,7 +17,7 @@ if ($?) {
     for ($process = 2; $process -le $nprocess; $process*=2) {
         Write-Output "Calcul sur $process processeur(s)"
         $i = 2
-        while ($i -le ([math]::Pow(2, 36) + 1)) {
+        while ($i -le ([math]::Pow(2, 30) + 1)) {
             & "$exe_folder\simpsonOpenMP.exe" $i $process
             $i *= 2
         }

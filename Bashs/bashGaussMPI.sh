@@ -16,10 +16,10 @@ else
 fi
 
 if [ $? -eq 0 ]; then
-    for ((process=1; process<=$nprocess; process++)); do
-        i=1024
+    for ((process=2; process<=$nprocess; process*=2)); do
+        i=2
         echo "Calcul sur $process processeur(s)"
-        while [ $i -le 8400 ]; do
+        while [ $i -le $((2**14 + 1)) ]; do
             mpirun -np $process $exe_folder/gauss2DMPI.out $i 
             i=$((i * 2)) 
         done 

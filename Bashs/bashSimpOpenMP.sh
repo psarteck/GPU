@@ -16,10 +16,10 @@ else
 fi
 
 if [ $? -eq 0 ]; then
-    for ((process=1; process<=$nprocess; process*=2)); do
+    for ((process=2; process<=$nprocess; process*=2)); do
         echo "Calcul sur $process processeur(s)"
-        i=1024
-        while [ $i -le $((2**36 + 1)) ]; do
+        i=2
+        while [ $i -le $((2**30 + 1)) ]; do
             $exe_folder/./simpsonOpenMP.out $i $process
             i=$((i * 2)) 
         done 
