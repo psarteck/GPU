@@ -55,7 +55,7 @@ double monteCarlo2DIntegration(std::function<double(double, double)> func, doubl
         for (int i = 0; i < num_samples; ++i) {
             double x = distrib_x(gen);
             double y = distrib_y(gen);
-            local_total += func(x, y);
+            local_total += f3(x, y);
         }
 
         total += local_total;
@@ -74,8 +74,8 @@ double monteCarlo2DIntegration(std::function<double(double, double)> func, doubl
 
 int main(int argc, char * argv[]) {
 
-    double x_min = 0.0, x_max = 1.0;
-    double y_min = 0.0, y_max = 1.0;
+    double x_min = 0.0, x_max = 10.0;
+    double y_min = 0.0, y_max = 10.0;
 
     int numPoints = (argc > 1) ? std::stoi(argv[1]) : 5000;
 
@@ -91,7 +91,7 @@ int main(int argc, char * argv[]) {
 
 
     // double ex = 0.25;
-    doubel ex = 13.1913267088667;
+    double ex = 13.1913267088667;
     double error = abs(result - ex)/abs(ex);
 
     std::cout << std::setprecision(20) << "Result: " << result << std::endl;

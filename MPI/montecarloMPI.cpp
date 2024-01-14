@@ -22,7 +22,7 @@ double monteCarlo2DIntegration(int localNumPoints, double x_min, double x_max, d
     for (int i = 0; i < localNumPoints; ++i) {
         double x = distrib_x(gen);
         double y = distrib_y(gen);
-        localTotal += func(x, y);
+        localTotal += f3(x, y);
     }
 
     return localTotal;
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 
     double startTime = MPI_Wtime();
 
-    double localResult = monteCarlo2DIntegration(myPoints, 0.0, 1.0, 0.0, 1.0, gen);
+    double localResult = monteCarlo2DIntegration(myPoints, 0.0, 10.0, 0.0, 10.0, gen);
 
     double globalResult;
     MPI_Reduce(&localResult, &globalResult, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
@@ -56,13 +56,13 @@ int main(int argc, char *argv[]) {
     double duration = endTime - startTime;
 
     if (processRank == 0) {
-        double area = (1.0 - 0.0) * (1.0 - 0.0); 
+        double area = (10.0 - 0.0) * (10.0 - 0.0); 
         double average = globalResult / numPoints;
         double integral = area * average;
 
-        // double ex = 0.25; 
+        //double ex = 0.25; 
         double ex = 13.1913267088667;
-        double error = std::abs(integral - ex * area);
+        double error = std::abs(integral - ex)/std::abs(ex);
 
         std::cout << std::setprecision(20) << "Result: " << integral << std::endl;
         std::cout << std::setprecision(20) << "Error: " << error << std::endl;
