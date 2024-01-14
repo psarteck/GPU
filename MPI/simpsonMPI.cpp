@@ -13,18 +13,18 @@ double function2(double x) {
     return 4.0 / (1.0 + x * x);
 }
 
-double compositeSimpsons(double a, double b, int n) {
+double compositeSimpsons(double a, double b, int n, double (*func)(double)) {
     double h = (b - a) / double(n);
-    double integral = function2(a) + function2(b);
+    double integral = func(a) + func(b);
 
     for (int i = 1; i < n; i += 2) {
         double x = a + i * h;
-        integral += 4.0 * function2(x);
+        integral += 4.0 * func(x);
     }
 
     for (int i = 2; i < n - 1; i += 2) {
         double x = a + i * h;
-        integral += 2.0 * function2(x);
+        integral += 2.0 * func(x);
     }
 
     return integral * h / 3.0;
@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
     double local_b = local_a + (b - a) / size;
 
     auto startTime = std::chrono::high_resolution_clock::now();
-    double local_result = compositeSimpsons(local_a, local_b, local_n);
+    double local_result = compositeSimpsons(local_a, local_b, local_n, &function2);
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count() / 1000.0;
 

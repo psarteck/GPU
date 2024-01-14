@@ -16,12 +16,12 @@ else
 fi
 
 if [ $? -eq 0 ]; then
-    for ((process=1; process<=$nprocess; process++)); do
+    for ((process=1; process<=$nprocess; process*=2)); do
         echo "Calcul sur $process processeur(s)"
-        i=10000
-        while [ $i -le 100000000 ]; do
+        i=1024
+        while [ $i -le $((2**36 + 1)) ]; do
             $exe_folder/./simpsonOpenMP.out $i $process
-            i=$((i * 10)) 
+            i=$((i * 2)) 
         done 
     done
     python3 $python_folder/graph.py "simp_Op_MP"

@@ -12,10 +12,10 @@ rm $results_folder/simp_MPI*
 mpic++ -std=c++11 $src_folder/simpsonMPI.cpp -o $exe_folder/simpsonMPI.out
 
 if [ $? -eq 0 ]; then
-    for ((process=1; process<=$nprocess; process++)); do
+    for ((process=2; process<=$nprocess; process*=2)); do
         echo "Calcul sur $process processeur(s)"
-        i=10000
-        while [ $i -le 100000000 ]; do
+        i=1024
+        while [ $i -le $((2**33 + 1)) ]; do
             mpirun -np $process $exe_folder/./simpsonMPI.out $i $process
             i=$((i * 10)) 
         done 

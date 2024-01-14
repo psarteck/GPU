@@ -26,7 +26,7 @@ double trigo(double theta){
     return sin(2.0*theta) / ((sin(theta) + cos(theta))*(sin(theta) + cos(theta))) ;
 }
 
-double compositeSimpsons_3_8(double a, double b, long int n, double (*func)(double)) { 
+double compositeSimpsons_3_8(double a, double b, long long int n, double (*func)(double)) { 
 
     while (n % 3 != 0){
         n++;
@@ -36,7 +36,7 @@ double compositeSimpsons_3_8(double a, double b, long int n, double (*func)(doub
     double integral = (func(a) + func(b));
 
     #pragma omp parallel for reduction(+:integral)
-    for (int i = 1; i < n - 1 ; i+=3) {
+    for (long long int i = 1; i < n - 1 ; i+=3) {
         double x = a + static_cast<double>(i) * h;
         integral += 3.0 * func(x);
         x = a + static_cast<double>(i+1) * h;
@@ -44,7 +44,7 @@ double compositeSimpsons_3_8(double a, double b, long int n, double (*func)(doub
     }
 
     #pragma omp parallel for reduction(+:integral)
-    for (int i = 3; i < n - 1; i += 3) {
+    for (long long int i = 3; i < n - 1; i += 3) {
         double x = a + double(i) * h;
         integral += 2.0 * func(x); 
     }
@@ -52,20 +52,20 @@ double compositeSimpsons_3_8(double a, double b, long int n, double (*func)(doub
     return 3.0 *integral * h / 8.0;
 }
 
-double compositeSimpsons(double a, double b, long int n, double (*func)(double)) { 
+double compositeSimpsons(double a, double b, long long int  n, double (*func)(double)) { 
     double h = (b - a) / double(n);
     double integral = func(a) + func(b);
 
     #pragma omp parallel for reduction(+:integral)
-    for (int i = 1; i < n; i += 2) {
-        double x = a + double(i) * h;
+    for (long long int  i = 1; i < n; i += 2) {
+        double x = a + i * h;
         integral += 4.0 * func(x);
         cout << i << endl;
     }
 
     #pragma omp parallel for reduction(+:integral)
-    for (int i = 2; i < n - 1; i += 2) {
-        double x = a + double(i) * h;
+    for (long long int  i = 2; i < n - 1; i += 2) {
+        double x = a + i * h;
         integral += 2.0 * func(x);
     }
 
@@ -82,7 +82,7 @@ int main(int argc, char * argv[]) {
     // Number of sub-intervals
     // int n = std::stoi(argv[1]);
 
-    int n = (argc > 1) ? std::stoi(argv[1]) : 10000;
+    long long int n = (argc > 1) ? std::stoi(argv[1]) : 10000;
 
     int numThreads = (argc > 2) ? std::stoi(argv[2]) : 4;
 
@@ -90,7 +90,7 @@ int main(int argc, char * argv[]) {
 
     double startTime = omp_get_wtime();
 
-    double result = compositeSimpsons_3_8(a, b, n, &funcCosSin);
+    double result = compositeSimpsons_3_8(a, b, n, &function);
 
     
 
@@ -98,11 +98,11 @@ int main(int argc, char * argv[]) {
 
     double duration = endTime - startTime;
 
-    double val_exacte = 20/(3*M_PI);
-    double val_exacte2 = 2.122065907891937810;
+    double val_exacte = M_PI;
+    // double val_exacte2 = 2.122065907891937810;
+    // double val_exacte2 = 2.122065907891937810;
 
     cout << std::setprecision(25)<< val_exacte << endl;
-    cout << std::setprecision(25)<< val_exacte2 << endl;
 
 
     double error = abs(result - val_exacte);
