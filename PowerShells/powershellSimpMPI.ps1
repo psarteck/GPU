@@ -13,7 +13,7 @@ if ($?) {
     for ($process = 2; $process -le $nprocess; $process*=2) {
         Write-Output "Calcul sur $process processeur(s)"
         $i = 2
-        while ($i -le ([math]::Pow(2, 32) + 1)) {
+        while ($i -le ([math]::Pow(2, 30) + 1)) {
             mpiexec -np $process "$exe_folder\simpsonMPI.exe" $i $process
             $i *= 2
         }

@@ -16,10 +16,10 @@ else
 fi
 
 if [ $? -eq 0 ]; then
-    for ((process=1; process<=$nprocess; process++)); do
+    for ((process=2; process<=$nprocess; process*=2)); do
         echo "Calcul sur $process processeur(s)"
-        i=1024
-        while [ $i -le 1000000 ]; do
+        i=2
+        while [ $i -le $((2**25 + 1)) ]; do
             $exe_folder/./montecarloOp_MP.out $i $process
             ((i *= 2))
         done
